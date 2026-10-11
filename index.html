@@ -870,6 +870,31 @@
   #tRate.sent .tsend{border-color:var(--c3);color:var(--c3);pointer-events:none}
   .tlink{border:none;background:none;color:var(--ink-faint);font:inherit;font-size:12px;font-weight:700;text-decoration:underline;padding:4px 0}
   #ovCoin,#ovGoal,#ovList{display:none!important}
+  /* 랭킹 */
+  .trk{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;border:1px solid #FFD23F;
+    background:color-mix(in srgb,#FFD23F 10%,var(--panel));color:#FFD23F;font:inherit;font-size:15px;font-weight:800}
+  .trk small{font-size:12.5px;font-weight:700;color:var(--ink-dim)}
+  #sRank{gap:6px}
+  .trf{width:44px;height:44px;border:none;background:none;color:var(--ink-dim);font:inherit;font-size:22px}
+  #tRankTabs{justify-content:center}
+  .tchips{display:flex;gap:6px;overflow-x:auto;flex:0 0 auto;padding:2px 0 6px;scrollbar-width:none;touch-action:pan-x}
+  .tchips::-webkit-scrollbar{display:none}
+  .tchips button{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:5px 10px 5px 5px;border-radius:999px;border:1px solid var(--line);
+    background:var(--panel);color:var(--ink-dim);font:inherit;font-size:13px;font-weight:700;white-space:nowrap}
+  .tchips button i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--bg)}
+  .tchips button[aria-pressed=true]{border-color:var(--ink);color:var(--ink)}
+  .trn{text-align:center;max-width:none;margin:0 auto}
+  .tranks{display:flex;flex-direction:column;gap:6px;padding-bottom:16px}
+  .tr{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:11px 14px;border-radius:9px;background:var(--panel)}
+  .tr .rk{font-size:15px;font-weight:800;color:var(--ink-faint);text-align:center}
+  .tr:nth-child(1) .rk{color:#FFD23F} .tr:nth-child(2) .rk{color:#D8E2E6} .tr:nth-child(3) .rk{color:#E0A070}
+  .tr .nm{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tr .nm small{margin-left:6px;font-size:11.5px;color:var(--ink-faint);font-weight:700}
+  .tr .sc{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+  .tr.me{background:color-mix(in srgb,#8FE3FF 16%,var(--panel));box-shadow:inset 0 0 0 1.5px #8FE3FF}
+  .tr.gap{margin-top:8px}
+  .tempty{padding:30px 10px;text-align:center;color:var(--ink-faint);font-size:14px;line-height:1.6}
+  #ovBest .trank{display:block;margin-top:4px;color:#FFD23F;font-weight:800}
 </style>
 
 <div id="app">
@@ -1012,6 +1037,7 @@
 <section class="scr" id="sPick">
   <div class="tpt"><span class="tme" id="tMe"></span><b>캐릭터 체험</b><span class="tprog" id="tProg"></span></div>
   <div class="tban" id="tBan"></div>
+  <button class="trk" id="tRankBtn"><span>랭킹</span><small id="tRankMe"></small></button>
   <div class="tlist" id="tList"></div>
   <div class="tfoot">
     <div class="srow"><span>조작</span><div class="seg" id="tInput"><button data-v="swipe">스와이프</button><button data-v="dpad">패드</button></div></div>
@@ -1020,6 +1046,14 @@
     <button class="sbtn" id="tBugM">버그 신고</button>
     <div class="tq" id="tQ"></div>
   </div>
+</section>
+
+<section class="scr" id="sRank">
+  <div class="top"><button class="back" id="tRankBack" aria-label="뒤로">‹</button><h2>랭킹</h2><button class="trf" id="tRankRe" aria-label="새로고침">↻</button></div>
+  <div class="tabs" id="tRankTabs"><button data-t="all" aria-pressed="true">전체</button><button data-t="char" aria-pressed="false">캐릭터별</button></div>
+  <div class="tchips" id="tRankChars"></div>
+  <p class="tnote trn" id="tRankNote"></p>
+  <div class="tranks" id="tRankList"></div>
 </section>
 
 <div id="tdet" class="ov"><div class="cdc" id="tDetC"></div></div>
@@ -3881,7 +3915,7 @@ requestAnimationFrame(tick);
    - 판마다 시드를 정해 게임 난수를 고정하고, 입력을 시간과 함께 기록 → 같은 판 재생·버그 재현용
    - 기록은 config.js의 LOG_URL(구글 Apps Script)로 전송. 실패하거나 주소가 없으면 이 기기에 쌓아 두고 나중에 다시 보냄 */
 (() => {
-const BUILD = 'test-1012a';
+const BUILD = 'test-1012b';
 const LOG_URL = (new URLSearchParams(location.search).get('log') || window.LOG_URL || '').trim();
 const HAS_URL = /^https:\/\/script\.google(usercontent)?\.com\//.test(LOG_URL);
 const SKEY = 'swapmatch.test.v1', QKEY = 'swapmatch.test.queue';
@@ -3989,6 +4023,7 @@ gameOver = function () {
   const s0 = st(r.char);
   $('#ovNew').textContent = `${chrOf(r.char).name} · ${s0.n}번째 판`;
   $('#ovBest').textContent = `이 캐릭터 최고 ${s0.best.toLocaleString()}`;
+  afterRunRank(r.char, r.id);
   fb = { runId: r.id, char: r.char, fun: 0, power: 0 };
   document.querySelectorAll('#tRate .tsc button').forEach(b => b.setAttribute('aria-pressed', 'false'));
   $('#tCm').value = ''; $('#tRate').classList.remove('sent'); $('#tFbSend').textContent = '평가 보내기';
@@ -4063,7 +4098,7 @@ addEventListener('error', e => reportErr(`${e.message} @${(e.filename || '').spl
 addEventListener('unhandledrejection', e => reportErr('promise: ' + (e.reason && e.reason.message || e.reason), e.reason && e.reason.stack));
 
 // ---- 화면 ----
-SCR.name = '#sName'; SCR.pick = '#sPick';
+SCR.name = '#sName'; SCR.pick = '#sPick'; SCR.rank = '#sRank';
 function play(id) {
   curChar = id; pendingTrial = id; closeDet();
   startGame();
@@ -4153,6 +4188,77 @@ $('#tGo').addEventListener('click', () => {
   else showPick();
 });
 $('#tNick').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tGo').click(); });
+// ---- 랭킹 ----
+// 로그 서버(Apps Script)의 ?action=rank 로 받아 옴. fetch가 막히면 JSONP로 다시 시도
+let RK = null, rkTab = 'all', rkChar = null, rkBusy = null;
+function loadRank(force) {
+  if (!HAS_URL) return Promise.resolve(null);
+  if (rkBusy && !force) return rkBusy;
+  const url = `${LOG_URL}?action=rank&me=${encodeURIComponent(S.tester)}&t=${Date.now()}`;
+  const jsonp = () => new Promise((res, rej) => {
+    const cb = '__rk' + Date.now(), sc = document.createElement('script');
+    const done = v => { delete window[cb]; sc.remove(); v ? res(v) : rej(new Error('jsonp')); };
+    window[cb] = v => done(v); sc.onerror = () => done(null); setTimeout(() => window[cb] && done(null), 12000);
+    sc.src = url + '&callback=' + cb; document.head.appendChild(sc);
+  });
+  rkBusy = fetch(url).then(r => r.json()).catch(jsonp).then(v => (RK = v)).catch(() => null).finally(() => { setTimeout(() => (rkBusy = null), 0); });
+  return rkBusy;
+}
+const nameOf = t => t === S.tester ? (S.nick || '나') : ((RK && RK.names && RK.names[t]) || '익명');
+function rankRows(L, extra) {
+  if (!L || !L.top.length) return '<div class="tempty">아직 기록이 없어요.<br>첫 번째 기록의 주인공이 되어 보세요!</div>';
+  let h = L.top.map(x => `<div class="tr${x.t === S.tester ? ' me' : ''}"><span class="rk">${x.r}</span>
+    <span class="nm"></span><span class="sc">${x.s.toLocaleString()}</span></div>`).join('');
+  if (L.me && L.me.r > L.top.length) h += `<div class="tr me gap"><span class="rk">${L.me.r}</span><span class="nm"></span><span class="sc">${L.me.s.toLocaleString()}</span></div>`;
+  return h;
+}
+// 닉네임은 테스터가 넣은 글자라 textContent로만 넣음
+function fillNames(L, box, extra) {
+  const rows = [...box.querySelectorAll('.tr')], data = L ? L.top.concat(L.me && L.me.r > L.top.length ? [L.me] : []) : [];
+  rows.forEach((el, i) => { const x = data[i]; if (!x) return; const nm = el.querySelector('.nm');
+    nm.textContent = nameOf(x.t); if (extra && x.c) { const sm = document.createElement('small'); sm.textContent = `${x.c}캐릭터`; nm.appendChild(sm); } });
+}
+function renderRank() {
+  $('#tRankTabs').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === rkTab)));
+  const chips = $('#tRankChars'); chips.hidden = rkTab !== 'char';
+  if (rkTab === 'char') {
+    if (!rkChar) rkChar = curChar || 'none';
+    chips.innerHTML = ROSTER.map(id => { const C = chrOf(id); return `<button data-id="${id}" aria-pressed="${id === rkChar}"><i style="background:${C.color}">${C.name[0]}</i>${C.name}</button>`; }).join('');
+    const on = chips.querySelector('[aria-pressed=true]'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+  const box = $('#tRankList'), note = $('#tRankNote');
+  if (!HAS_URL) { note.textContent = ''; box.innerHTML = '<div class="tempty">기록 서버가 설정되면 랭킹이 열려요.</div>'; return; }
+  if (!RK) { note.textContent = ''; box.innerHTML = '<div class="tempty">불러오는 중…</div>'; return; }
+  const L = rkTab === 'all' ? RK.overall : (RK.chars[rkChar] || null);
+  note.textContent = rkTab === 'all' ? '캐릭터별 최고 점수를 모두 더한 점수예요. 여러 캐릭터를 해 볼수록 올라가요.'
+    : `${chrOf(rkChar).name}로 끝까지 한 판 중 최고 점수`;
+  box.innerHTML = rankRows(L);
+  fillNames(L, box, rkTab === 'all');
+}
+function openRank() { go('rank'); renderRank(); loadRank(true).then(renderRank); }
+$('#tRankBtn').addEventListener('click', () => { sfx('ui'); openRank(); });
+$('#tRankBack').addEventListener('click', () => { sfx('ui'); showPick(); });
+$('#tRankRe').addEventListener('click', () => { sfx('ui'); RK = null; renderRank(); loadRank(true).then(renderRank); });
+$('#tRankTabs').addEventListener('click', e => { const b = e.target.closest('button[data-t]'); if (!b) return; rkTab = b.dataset.t; sfx('ui'); renderRank(); });
+$('#tRankChars').addEventListener('click', e => { const b = e.target.closest('button[data-id]'); if (!b) return; rkChar = b.dataset.id; sfx('ui'); renderRank(); });
+function rankBadge() {
+  const el = $('#tRankMe'); if (!el) return;
+  el.textContent = !HAS_URL ? '' : RK && RK.overall.me ? `전체 ${RK.overall.me.r}위 / ${RK.overall.total}명` : '';
+}
+// 판이 끝나면 기록이 서버에 들어간 뒤 이 캐릭터 순위를 결과 화면에 붙임
+function afterRunRank(ch, runId) {
+  if (!HAS_URL) return;
+  setTimeout(() => loadRank(true).then(v => {
+    if (!v || !fb || fb.runId !== runId) return;
+    const L = v.chars[ch], me = L && L.me; if (!me) return;
+    const sp = document.createElement('span'); sp.className = 'trank';
+    sp.textContent = `${chrOf(ch).name} 랭킹 ${me.r}위 / ${L.total}명` + (me.r === 1 ? ' 👑' : '');
+    $('#ovBest').appendChild(sp);
+  }), 2500);
+}
+const _renderPick = renderPick;
+renderPick = function () { _renderPick(); rankBadge(); if (HAS_URL && !RK) loadRank().then(rankBadge); };
+
 if (S.nick) showPick(); else go('name');
 flush();
 })();
