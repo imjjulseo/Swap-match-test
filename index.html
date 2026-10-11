@@ -864,7 +864,11 @@
   .tsc button{padding:9px 0;border-radius:7px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-dim);font:inherit;font-size:14px;font-weight:800}
   .tsc.pw button{font-size:11px;padding:10px 0;white-space:nowrap;letter-spacing:-.02em}
   .tsc button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-  .tlink{align-self:flex-end;border:none;background:none;color:var(--ink-faint);font:inherit;font-size:12px;font-weight:700;text-decoration:underline;padding:4px 0}
+  .tfb{display:flex;justify-content:space-between;align-items:center}
+  .tsend{font:inherit;font-size:13px;font-weight:800;padding:8px 14px;border-radius:7px;border:1px solid var(--ink-dim);background:var(--panel-2);color:var(--ink)}
+  #tRate.sent .tsc,#tRate.sent textarea{opacity:.45;pointer-events:none}
+  #tRate.sent .tsend{border-color:var(--c3);color:var(--c3);pointer-events:none}
+  .tlink{border:none;background:none;color:var(--ink-faint);font:inherit;font-size:12px;font-weight:700;text-decoration:underline;padding:4px 0}
   #ovCoin,#ovGoal,#ovList{display:none!important}
 </style>
 
@@ -1047,7 +1051,7 @@
     <div class="trow"><span>재미</span><div class="tsc" data-k="fun"><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button></div></div>
     <div class="trow"><span>세기</span><div class="tsc pw" data-k="power"><button>너무 약함</button><button>약함</button><button>적당</button><button>셈</button><button>너무 셈</button></div></div>
     <textarea id="tCm" rows="2" maxlength="300" placeholder="한 줄 소감 (선택)"></textarea>
-    <button class="tlink" id="tBugO">버그 신고</button>
+    <div class="tfb"><button class="tlink" id="tBugO">버그 신고</button><button class="tsend" id="tFbSend">평가 보내기</button></div>
   </div>
   <div class="ovb"><button class="btn ghost" id="toMenu">캐릭터 목록</button><button class="btn" id="again">다시 하기</button></div>
 </div></div>
@@ -3153,7 +3157,10 @@ function showHints(){
     board.appendChild(d); hintEls.push(d);
   }
 }
+// 글자 입력 칸에서는 조작 키를 가로채지 않음 (닉네임·소감·버그 신고 입력)
+const typing = e => !!(e.target && e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'));
 addEventListener('keydown',e=>{
+  if (typing(e)) return;
   const m={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1],w:[-1,0],s:[1,0],a:[0,-1],d:[0,1],
     q:[-1,-1],e:[-1,1],z:[1,-1],c:[1,1]};
   if (e.key===' ' && (isChr('mirror')||isChr('restock')||isChr('painter')) && curScreen==='game'){ e.preventDefault(); if (!dead && !halted() && holdChr()){ begin(); holdAct(); } return; }
@@ -3843,7 +3850,7 @@ $('#pRestart').addEventListener('click',()=>{ if (runTrial){ go('chr'); return; 
 $('#pMenu').addEventListener('click',leaveGame);
 $('#again').addEventListener('click',()=>{ sfx('ui'); startGame(); });
 $('#toMenu').addEventListener('click',()=>{ sfx('ui'); go('menu'); });
-addEventListener('keydown',e=>{ if (e.key==='Escape' && curScreen==='game') setPause(!paused); });
+addEventListener('keydown',e=>{ if (typing(e)) return; if (e.key==='Escape' && curScreen==='game') setPause(!paused); });
 board=$('#board');
 function fitViewport(){
   const h = window.visualViewport ? visualViewport.height : innerHeight;
@@ -3874,7 +3881,7 @@ requestAnimationFrame(tick);
    - 판마다 시드를 정해 게임 난수를 고정하고, 입력을 시간과 함께 기록 → 같은 판 재생·버그 재현용
    - 기록은 config.js의 LOG_URL(구글 Apps Script)로 전송. 실패하거나 주소가 없으면 이 기기에 쌓아 두고 나중에 다시 보냄 */
 (() => {
-const BUILD = 'test-1011a';
+const BUILD = 'test-1012a';
 const LOG_URL = (new URLSearchParams(location.search).get('log') || window.LOG_URL || '').trim();
 const HAS_URL = /^https:\/\/script\.google(usercontent)?\.com\//.test(LOG_URL);
 const SKEY = 'swapmatch.test.v1', QKEY = 'swapmatch.test.queue';
@@ -3984,7 +3991,7 @@ gameOver = function () {
   $('#ovBest').textContent = `이 캐릭터 최고 ${s0.best.toLocaleString()}`;
   fb = { runId: r.id, char: r.char, fun: 0, power: 0 };
   document.querySelectorAll('#tRate .tsc button').forEach(b => b.setAttribute('aria-pressed', 'false'));
-  $('#tCm').value = '';
+  $('#tCm').value = ''; $('#tRate').classList.remove('sent'); $('#tFbSend').textContent = '평가 보내기';
 };
 // 앱을 내리거나 닫으면 중간 기록을 한 번 보냄 (돌아와서 끝까지 하면 같은 runId로 최종 기록이 또 감)
 document.addEventListener('visibilitychange', () => {
@@ -4002,13 +4009,19 @@ $('#tRate').addEventListener('click', e => {
   fb[k] = fb[k] === v ? 0 : v;
   [...box.children].forEach((x, i) => x.setAttribute('aria-pressed', String(i + 1 === fb[k])));
 });
+// 평가는 '보내기'를 누르거나, 안 누르고 다음으로 넘어가도 입력한 게 있으면 전송
 function sendFb() {
-  if (!fb) return;
+  if (!fb) return false;
   const comment = $('#tCm').value.trim();
-  if (fb.fun || fb.power || comment)
-    send('feedback', { runId: fb.runId, char: fb.char, charName: chrOf(fb.char).name, fun: fb.fun || '', power: fb.power || '', powerText: fb.power ? POWER[fb.power - 1] : '', comment });
+  if (!(fb.fun || fb.power || comment)) return false;
+  send('feedback', { runId: fb.runId, char: fb.char, charName: chrOf(fb.char).name, fun: fb.fun || '', power: fb.power || '', powerText: fb.power ? POWER[fb.power - 1] : '', comment });
   fb = null;
+  return true;
 }
+$('#tFbSend').addEventListener('click', () => {
+  if (sendFb()) { sfx('ui'); $('#tRate').classList.add('sent'); $('#tFbSend').textContent = '보냈어요'; }
+  else { $('#tCm').focus(); }
+});
 
 // ---- 버그 신고 ----
 const errs = [];
