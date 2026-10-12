@@ -895,6 +895,8 @@
   .tr.gap{margin-top:8px}
   .tempty{padding:30px 10px;text-align:center;color:var(--ink-faint);font-size:14px;line-height:1.6}
   #ovBest .trank{display:block;margin-top:4px;color:#FFD23F;font-weight:800}
+  .tr .ch{display:inline-flex;align-items:center;gap:5px;margin-left:8px;font-size:12px;font-weight:700;color:var(--ink-dim);vertical-align:1px}
+  .tr .ch i{font-style:normal;width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;font-weight:800;color:var(--bg)}
 </style>
 
 <div id="app">
@@ -1050,7 +1052,7 @@
 
 <section class="scr" id="sRank">
   <div class="top"><button class="back" id="tRankBack" aria-label="뒤로">‹</button><h2>랭킹</h2><button class="trf" id="tRankRe" aria-label="새로고침">↻</button></div>
-  <div class="tabs" id="tRankTabs"><button data-t="all" aria-pressed="true">전체</button><button data-t="char" aria-pressed="false">캐릭터별</button></div>
+  <div class="tabs" id="tRankTabs"><button data-t="sum" aria-pressed="true">합계</button><button data-t="char" aria-pressed="false">캐릭터별</button><button data-t="all" aria-pressed="false">전체</button></div>
   <div class="tchips" id="tRankChars"></div>
   <p class="tnote trn" id="tRankNote"></p>
   <div class="tranks" id="tRankList"></div>
@@ -3915,7 +3917,7 @@ requestAnimationFrame(tick);
    - 판마다 시드를 정해 게임 난수를 고정하고, 입력을 시간과 함께 기록 → 같은 판 재생·버그 재현용
    - 기록은 config.js의 LOG_URL(구글 Apps Script)로 전송. 실패하거나 주소가 없으면 이 기기에 쌓아 두고 나중에 다시 보냄 */
 (() => {
-const BUILD = 'test-1012b';
+const BUILD = 'test-1012c';
 const LOG_URL = (new URLSearchParams(location.search).get('log') || window.LOG_URL || '').trim();
 const HAS_URL = /^https:\/\/script\.google(usercontent)?\.com\//.test(LOG_URL);
 const SKEY = 'swapmatch.test.v1', QKEY = 'swapmatch.test.queue';
@@ -4109,11 +4111,9 @@ rebind('#toMenu', () => { sendFb(); sfx('ui'); showPick(); });
 rebind('#pRestart', () => { setPause(false); play(curChar); });
 rebind('#pMenu', () => { endRun('quit'); if (blocks && !dead) { dead = true; padStop(); clearHints(); } setPause(false); showPick(); });
 
-function order() {
-  const r = mulberry32(hash(S.tester)), rest = GACHA_IDS.slice();
-  for (let i = rest.length - 1; i > 0; i--) { const j = (r() * (i + 1)) | 0; [rest[i], rest[j]] = [rest[j], rest[i]]; }
-  return ['none', ...rest];
-}
+// 목록 순서: 희귀도 순 (기본 → 희귀 → 영웅 → 전설 → 신화), 같은 등급 안에서는 로스터 순
+const ORDER = ['none', ...chrSorted()];
+const order = () => ORDER;
 function showPick() { go('pick'); renderPick(); flush(); }
 function renderPick() {
   $('#tMe').textContent = S.nick;
@@ -4123,7 +4123,7 @@ function renderPick() {
   const next = order().find(id => st(id).n < PLAYS);
   $('#tBan').innerHTML = base < 2
     ? `먼저 <b>기본</b> 캐릭터로 <b>2판</b> 해 주세요. 다른 캐릭터와 비교하는 기준이 돼요.`
-    : next ? `위에서부터 차례로, 캐릭터마다 <b>${PLAYS}판</b>씩 해 주세요. 판이 끝나면 짧게 평가해 주시면 큰 도움이 돼요.`
+    : next ? `해 보고 싶은 캐릭터로 <b>${PLAYS}판</b>씩 해 주세요. 많이 해 볼수록 좋아요. 판이 끝나면 짧게 평가해 주시면 큰 도움이 돼요.`
     : `전부 해 주셨어요. 고마워요! 더 하고 싶은 캐릭터가 있으면 마음껏 해 주세요.`;
   $('#tList').innerHTML = order().map(id => {
     const C = chrOf(id), r = id === 'none' ? 'N' : rarOf(id), x = st(id);
@@ -4190,7 +4190,7 @@ $('#tGo').addEventListener('click', () => {
 $('#tNick').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tGo').click(); });
 // ---- 랭킹 ----
 // 로그 서버(Apps Script)의 ?action=rank 로 받아 옴. fetch가 막히면 JSONP로 다시 시도
-let RK = null, rkTab = 'all', rkChar = null, rkBusy = null;
+let RK = null, rkTab = 'sum', rkChar = null, rkBusy = null;
 function loadRank(force) {
   if (!HAS_URL) return Promise.resolve(null);
   if (rkBusy && !force) return rkBusy;
@@ -4216,24 +4216,29 @@ function rankRows(L, extra) {
 function fillNames(L, box, extra) {
   const rows = [...box.querySelectorAll('.tr')], data = L ? L.top.concat(L.me && L.me.r > L.top.length ? [L.me] : []) : [];
   rows.forEach((el, i) => { const x = data[i]; if (!x) return; const nm = el.querySelector('.nm');
-    nm.textContent = nameOf(x.t); if (extra && x.c) { const sm = document.createElement('small'); sm.textContent = `${x.c}캐릭터`; nm.appendChild(sm); } });
+    nm.textContent = nameOf(x.t);
+    if (extra === 'sum' && x.c) { const sm = document.createElement('small'); sm.textContent = `${x.c}캐릭터`; nm.appendChild(sm); }
+    if (extra === 'all' && x.ch) { const C = chrOf(x.ch); if (!C) return;
+      const ch = document.createElement('span'); ch.className = 'ch';
+      ch.innerHTML = `<i style="background:${C.color}">${C.name[0]}</i>`; ch.appendChild(document.createTextNode(C.name)); nm.appendChild(ch); } });
 }
 function renderRank() {
   $('#tRankTabs').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === rkTab)));
   const chips = $('#tRankChars'); chips.hidden = rkTab !== 'char';
   if (rkTab === 'char') {
     if (!rkChar) rkChar = curChar || 'none';
-    chips.innerHTML = ROSTER.map(id => { const C = chrOf(id); return `<button data-id="${id}" aria-pressed="${id === rkChar}"><i style="background:${C.color}">${C.name[0]}</i>${C.name}</button>`; }).join('');
+    chips.innerHTML = ORDER.map(id => { const C = chrOf(id); return `<button data-id="${id}" aria-pressed="${id === rkChar}"><i style="background:${C.color}">${C.name[0]}</i>${C.name}</button>`; }).join('');
     const on = chips.querySelector('[aria-pressed=true]'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
   }
   const box = $('#tRankList'), note = $('#tRankNote');
   if (!HAS_URL) { note.textContent = ''; box.innerHTML = '<div class="tempty">기록 서버가 설정되면 랭킹이 열려요.</div>'; return; }
   if (!RK) { note.textContent = ''; box.innerHTML = '<div class="tempty">불러오는 중…</div>'; return; }
-  const L = rkTab === 'all' ? RK.overall : (RK.chars[rkChar] || null);
-  note.textContent = rkTab === 'all' ? '캐릭터별 최고 점수를 모두 더한 점수예요. 여러 캐릭터를 해 볼수록 올라가요.'
+  const L = rkTab === 'sum' ? RK.overall : rkTab === 'all' ? (RK.all || null) : (RK.chars[rkChar] || null);
+  note.textContent = rkTab === 'sum' ? '캐릭터별 최고 점수를 모두 더한 점수예요. 여러 캐릭터를 해 볼수록 올라가요.'
+    : rkTab === 'all' ? '캐릭터 구분 없이 모든 기록을 한 줄로 세웠어요 (한 사람이 같은 캐릭터로 낸 기록은 최고 하나만).'
     : `${chrOf(rkChar).name}로 끝까지 한 판 중 최고 점수`;
   box.innerHTML = rankRows(L);
-  fillNames(L, box, rkTab === 'all');
+  fillNames(L, box, rkTab);
 }
 function openRank() { go('rank'); renderRank(); loadRank(true).then(renderRank); }
 $('#tRankBtn').addEventListener('click', () => { sfx('ui'); openRank(); });
@@ -4243,7 +4248,7 @@ $('#tRankTabs').addEventListener('click', e => { const b = e.target.closest('but
 $('#tRankChars').addEventListener('click', e => { const b = e.target.closest('button[data-id]'); if (!b) return; rkChar = b.dataset.id; sfx('ui'); renderRank(); });
 function rankBadge() {
   const el = $('#tRankMe'); if (!el) return;
-  el.textContent = !HAS_URL ? '' : RK && RK.overall.me ? `전체 ${RK.overall.me.r}위 / ${RK.overall.total}명` : '';
+  el.textContent = !HAS_URL ? '' : RK && RK.overall.me ? `합계 ${RK.overall.me.r}위 / ${RK.overall.total}명` : '';
 }
 // 판이 끝나면 기록이 서버에 들어간 뒤 이 캐릭터 순위를 결과 화면에 붙임
 function afterRunRank(ch, runId) {
