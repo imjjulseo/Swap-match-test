@@ -45,9 +45,9 @@
   /* 다음에 깨야 할 색으로 카드 배경을 칠함 */
   .rc.tint{background:color-mix(in srgb,var(--nc) 36%,var(--panel));border-color:color-mix(in srgb,var(--nc) 80%,var(--panel))}
   #recipes.wild .rc:not(.chr){border-color:var(--chr);box-shadow:0 0 0 1px var(--chr)}
-  .rc.enter{animation:cardIn .34s cubic-bezier(.2,.9,.3,1.35)}
+  .rc.enter{animation:cardIn .24s cubic-bezier(.2,.9,.3,1.35)}
   @keyframes cardIn{from{transform:translateY(-18px) scale(.82);opacity:0}to{transform:none;opacity:1}}
-  .rc.break{animation:cardBreak .3s ease-in forwards}
+  .rc.break{animation:cardBreak .2s ease-in forwards}
   @keyframes cardBreak{0%{transform:none}30%{transform:scale(1.1);filter:brightness(1.9)}
     100%{transform:scale(.55) translateY(-14px);opacity:0;filter:brightness(2.6)}}
   .rc.out{animation:cardOut .22s ease-in forwards}
@@ -166,7 +166,7 @@
     box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .35s cubic-bezier(.2,.9,.3,1.3);pointer-events:none;white-space:nowrap}
   #toast.on{transform:translate(-50%,0)}
 
-  #pad{display:none;grid-template-columns:repeat(3,62px);grid-template-rows:repeat(3,62px);gap:7px;
+  #pad{display:none;grid-template-columns:repeat(3,78px);grid-template-rows:repeat(3,78px);gap:8px;
     align-self:center;justify-content:center;flex:0 0 auto;touch-action:none;-webkit-user-select:none;user-select:none}
   #pad.on{display:grid}
   #pad button{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;color:var(--ink);
@@ -428,6 +428,9 @@
   [data-ch=mirror]::after{content:''!important;width:40%;height:40%;border-radius:50%;background:linear-gradient(90deg,#EEF7FF 50%,#7FA6C9 50%)!important}
   [data-ch=ambi]::after{content:''!important;width:46%;height:50%;clip-path:polygon(18% 100%,18% 34%,30% 34%,30% 6%,44% 6%,44% 30%,52% 30%,52% 0,66% 0,66% 30%,74% 30%,74% 10%,88% 10%,88% 62%,100% 46%,100% 66%,82% 100%)}
   #player2[data-ch=ambi]::after{transform:translate(-50%,-50%) scaleX(-1)}
+  #player[data-ch=ambi]{border-color:#6FD3FF;box-shadow:0 0 0 2px rgba(111,211,255,.35)}
+  #player2[data-ch=ambi]{border-color:#FFB38A;box-shadow:0 0 0 2px rgba(255,179,138,.35)}
+  body.ambi #boardwrap::after{content:'';position:absolute;left:50%;top:6%;bottom:6%;border-left:2px dashed rgba(255,255,255,.16);pointer-events:none;z-index:4}
   .nojump .blk,.nojump #player,.nojump #player2{transition:none!important}
 
   /* 마탄: 플레이어 주변만 밝게 남기는 암전 + 탄창 */
@@ -698,11 +701,6 @@
   .blk.grown .core{animation:grown .5s ease-out}
   @keyframes grown{0%{box-shadow:0 0 0 4px #9BE36D,0 0 18px #9BE36D;filter:brightness(1.8)}100%{box-shadow:none;filter:none}}
   .aura{position:absolute;pointer-events:none;z-index:1;border-radius:6px;background:rgba(155,227,109,.13);box-shadow:inset 0 0 0 2px rgba(155,227,109,.55)}
-  #board[data-bounty="0"] .blk[data-c="0"]::after,#board[data-bounty="1"] .blk[data-c="1"]::after,
-  #board[data-bounty="2"] .blk[data-c="2"]::after,#board[data-bounty="3"] .blk[data-c="3"]::after,
-  #board[data-bounty="4"] .blk[data-c="4"]::after{content:"";position:absolute;inset:-2px;border:3px solid #fff;border-radius:7px;
-    box-shadow:0 0 10px rgba(255,255,255,.55);pointer-events:none;animation:bountyPulse 1.1s ease-in-out infinite}
-  @keyframes bountyPulse{50%{opacity:.35}}
   body.nav #board{outline:2px dashed color-mix(in srgb,var(--chr) 70%,transparent);outline-offset:3px}
   #player.mine{border-style:dashed;border-color:#C9925E}
   /* 10/11 신규 캐릭터 상태 */
@@ -852,6 +850,21 @@
   .zbolt{position:fixed;top:0;width:18px;z-index:47;pointer-events:none;transform:translateX(-50%);transform-origin:top center;
     background:linear-gradient(#fff,#FFF6B0 55%,#FFD22E);clip-path:polygon(50% 0,78% 22%,58% 24%,86% 50%,60% 52%,76% 78%,52% 76%,58% 100%,30% 70%,48% 68%,22% 46%,44% 44%,24% 20%,46% 18%);
     filter:drop-shadow(0 0 6px #FFF3A0) drop-shadow(0 0 14px #FFD22E)}
+  #bgfx{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0}
+  #app{position:relative;z-index:1}
+  .fbadge{position:absolute;left:50%;top:50%;z-index:9;transform:translate(-50%,-50%);pointer-events:none;display:flex;flex-direction:column;align-items:center;line-height:1;
+    color:#FFF2D6;text-shadow:0 0 18px #FF7A45,0 0 3px #000;opacity:.92}
+  .fbadge b{font-size:clamp(46px,16vw,84px);font-weight:900;letter-spacing:-2px}
+  .fbadge small{font-size:15px;font-weight:800;margin-top:2px;color:#FFD9A8}
+  .shock{position:fixed;width:70px;height:70px;margin:-35px 0 0 -35px;border:6px solid #fff;border-radius:50%;pointer-events:none;z-index:31}
+  .slam{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:32;font-weight:900;letter-spacing:-1px;white-space:nowrap;
+    text-shadow:0 3px 0 #6B4E1E,0 0 18px rgba(255,200,120,.85),0 0 2px #000;-webkit-text-stroke:1.5px #3A2A10}
+  .ghint{position:absolute;pointer-events:none;z-index:2;border-radius:7px;border:3px solid var(--gc,#C6F36B);background:color-mix(in srgb,var(--gc,#C6F36B) 30%,transparent);box-shadow:0 0 14px var(--gc,#C6F36B);animation:ghint .5s ease-in-out infinite alternate}
+  .ghint.far{border-style:dashed;opacity:.65;animation-duration:.8s}
+  @keyframes ghint{from{opacity:.35;scale:.92}to{opacity:1;scale:1.04}}
+  .status .eq{display:inline-flex;align-items:center;gap:3px;margin-right:6px;font-weight:900}
+  .status .eq i{display:inline-block;width:15px;height:15px;border-radius:4px;box-shadow:0 0 0 1.5px rgba(255,255,255,.6)}
+  body.mirror .rc:not(.chr) .dots{flex-direction:row-reverse;justify-content:flex-end}
   .zbadge{position:absolute;z-index:8;transform:translate(-50%,-110%);pointer-events:none;font-size:22px;font-weight:800;color:#FFF7C2;text-shadow:0 0 10px #FFD22E,0 0 2px #000;white-space:nowrap}
 
   /* ===================== 체험판 ===================== */
@@ -963,6 +976,7 @@
 <canvas id="fxc"></canvas>
 <div id="spot"></div>
 <div id="blood"></div>
+<div id="bgfx"></div>
 <div id="zeusDim"></div>
 <div id="flash"></div>
 <div id="banner"><div class="t"></div><div class="s"></div></div>
@@ -1169,82 +1183,88 @@ let reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches || set
 
 const cfg = {
   n:7, colors:4, input:settings.input, das:170, arr:60,
-  fix:60, tc:2.5, tk:0.05, tm:1,
+  fix:60, tc:2.5, tk:0.08, tm:0.8,   // 10/14: 매치 시간 감쇠 강화 (0.05→0.08초/매치, 최저 1.0→0.8초)
   chr:'none', advance:'all', lenMode:'fixed', lenMix:'mid', cue:'tint', base:100,
   refill:'spread', rd:3, gt:5, coinP:10,
   prog:'stage', slots:3, rf0:8, rf1:8
 };
 // 자유 설정 모드에서 쓰는 판 값 (단계 모드에서는 단계 값이 덮어씀)
-const free = {n:7, colors:4, fix:60};
+const BOARD_N = (()=>{ try{ return +new URLSearchParams(location.search).get('n')===9 ? 9 : 7; }catch(_){ return 7; } })();
+const free = {n:BOARD_N, colors:4, fix:60};
 const LEN_MIX = { short:[60,35,5], mid:[35,45,20], long:[15,45,40] };
 
 /* 캐릭터: 비용(고정 족보 난이도)과 효과 크기를 맞춤. 약한 효과 = 짧은 족보. */
 const CHARS = {
-  gardener: {name:'정원사',  color:'#C6F36B', seq:[0,1],     title:'촉진!',  ab:'모든 씨앗이 즉시 자람'},
+  gardener: {name:'정원사',  color:'#C6F36B', seq:[0,1],     title:'촉진!',  ab:'모든 씨앗이 즉시 자라고, 5초 동안 매치 칸 표시'},
   clock:    {name:'시계공',  color:'#F7E27A', seq:[2,3,2],   title:'정지!',  ab:'4초 동안 시간이 멈춤'},
-  gambler:  {name:'도박사',  color:'#56E6E6', seq:[1,1,1],     title:'올인!',  ab:'다음 족보 점수 ×2'},
-  fever:    {name:'축제꾼',  color:'#FF7A45', seq:[3,0,2],   title:'피버!',  ab:'10초 동안 족보가 한 칸짜리로 바뀜'},
-  alchemist:{name:'연금술사',color:'#E4DCFF', seq:[2,0,2],   title:'변성!',  ab:'블럭 5개를 다음에 필요한 색으로 바꿈'},
-  joker:    {name:'조커',    color:'#FF6FD8', seq:[0,1,2,3,0], title:'와일드!',ab:'다음 클리어 2번이 모든 족보를 한 칸씩 진행'},
+  gambler:  {name:'도박사',  color:'#56E6E6', seq:[1,1,1],     title:'올인!',  ab:'다음 족보 점수 ×2 (최대 2회 누적)'},
+  fever:    {name:'축제꾼',  color:'#FF7A45', seq:[3,0,2],   title:'피버!',  ab:'10초 피버: 색 상관없이 매치마다 스택, 리필 2배 빠르게. 끝날 때 스택만큼 한 번에 큰 점수'},
+  alchemist:{name:'연금술사',color:'#E4DCFF', seq:[2,0,2],   title:'변성!',  ab:'가까운 블럭 5개를 다음에 필요한 색으로 바꿈'},
+  joker:    {name:'조커',    color:'#FF6FD8', seq:[0,1,2,3], title:'와일드!',ab:'다음 클리어 2번이 모든 족보를 한 칸씩 진행 (4칸 족보)'},
   king:     {name:'왕',      color:'#FFC94D', seq:[1,2,1],   title:'행차!',  ab:'10초 동안 대각선 이동'},
   wall:     {name:'벽 타는 자',color:'#7FE0A8', seq:[],      title:'',       ab:'벽에 붙으면 3방향만 같아도 깨짐 (얻는 시간 절반)', passive:true},
-  bomber:   {name:'폭파범',  color:'#FF5A5A', seq:[0,3,0],   title:'점화!',  ab:'다음 매치 3번이 대각선까지 폭발, 시간 2배'},
-  photo:    {name:'사진사',  color:'#F4F4F4', seq:[2,0,3,1], title:'찰칵!',  ab:'7초 동안 화면을 멈추고, 쌓인 매치를 한 번에 터뜨림 (최대 ×4)'},
+  bomber:   {name:'폭파범',  color:'#FF5A5A', seq:[0,3,0],   title:'점화!',  ab:'다음 매치 5번이 대각선까지 폭발, 시간 2배'},
+  photo:    {name:'사진사',  color:'#F4F4F4', seq:[2,0,3,1], title:'찰칵!',  ab:'7초 동안 화면을 멈추고, 쌓인 매치를 한 번에 터뜨림. 매치 수 보너스 250 → 500 → 1,000 … (매치마다 2배)'},
   // 팀원 신규 캐릭터 (9×9 원안을 7×7로, 색은 우리 팔레트로: 빨강 1 · 파랑 2 · 노랑 0 · 초록 3)
-  marathon: {name:'마라토너',color:'#7FB8FF', seq:[],          title:'',      ab:'네 모서리를 반시계로 돌기. 매치한 뒤 깃발에 닿으면 +2초', passive:true},
-  sewer:    {name:'수선사',  color:'#2FCF74', seq:[3,2],       title:'바늘!',  ab:'블럭 하나를 한 바퀴 감싸 지나가면 그 블럭이 뽑히며 매치'},
-  mirror:   {name:'거울',    color:'#BFE0FF', seq:[],          title:'',      ab:'판을 꾹 누르면 위아래가 뒤집힌 거울세계. 거울세계에선 족보를 뒤에서부터 채움', passive:true},
-  vampire:  {name:'뱀파이어',color:'#E0304A', seq:[1,1,1,1], title:'피의 시간!', ab:'6초 동안 모든 블럭이 빨강. 족보는 짧은 것부터 차례로 채움'},
-  madan:    {name:'마탄',    color:'#C77DFF', seq:[1,3,2,0,3], title:'장전!',  ab:'시간이 멈추고 6발 장전. 들어가는 칸의 블럭을 쏴서 그 색으로 족보 진행(탄으로 완성한 족보 ×1.25). 7번째 탄은 저주'},
-  ambi:     {name:'양손잡이',color:'#FFB38A', seq:[],          title:'',      ab:'내가 둘. 화면 왼쪽은 왼손, 오른쪽은 오른손', passive:true},
+  marathon: {name:'마라토너',color:'#7FB8FF', seq:[],          title:'',      ab:'네 모서리를 반시계로 돌기. 매치한 뒤 깃발에 닿으면 +2초, 연달아 통과하면 +3 → +4초', passive:true},
+  sewer:    {name:'수선사',  color:'#2FCF74', seq:[3,2],       title:'바늘!',  ab:'바늘 2번: 블럭 하나를 한 바퀴 감싸면 뽑히며 매치, 한 번 더 감쌀 수 있음'},
+  mirror:   {name:'거울',    color:'#BFE0FF', seq:[],          title:'',      ab:'판을 꾹 누르면 거울세계. 족보를 뒤에서부터 채우고, 앞뒤가 만나 완성하면 ×1.5', passive:true},
+  vampire:  {name:'뱀파이어',color:'#E0304A', seq:[1,1,1,1], title:'피의 시간!', ab:'6초 동안 모든 블럭이 빨강, 리필 2.5배. 족보는 짧은 것부터 차례로 채움'},
+  madan:    {name:'마탄',    color:'#C77DFF', seq:[1,3,2,0,3], title:'장전!',  ab:'시간이 멈추고 6발 장전(18초). 들어가는 칸의 블럭을 쏴서 그 색으로 족보 진행(탄으로 완성한 족보 ×1.25). 7번째 탄은 저주'},
+  ambi:     {name:'양손잡이',color:'#FFB38A', seq:[],          title:'',      ab:'(숨은 캐릭터) 내가 둘. 화면 왼쪽은 왼손, 오른쪽은 오른손', passive:true},
   // 10/11 신규
   mechanic: {name:'정비공',  color:'#B8C4CC', seq:[2,1],       title:'정비!',  ab:'진행이 가장 덜 된 족보를 한 칸 진행'},
-  pickpocket:{name:'소매치기',color:'#E8C15A', seq:[],         title:'',      ab:'족보를 완성하면 주변 두 칸 안의 금화를 끌어옴', passive:true},
-  painter:  {name:'화가',    color:'#FF8FB1', seq:[0,2,1,3],   title:'물감!',  ab:'족보를 완성하면 물감 1개(최대 2개). 판을 꾹 누르면 지나온 3칸을 다음에 필요한 색으로 칠함'},
+  pickpocket:{name:'소매치기',color:'#E8C15A', seq:[],         title:'',      ab:'족보를 완성하면 주변 두 칸 안의 금화를 끌어옴, 금화마다 +100점', passive:true},
+  painter:  {name:'화가',    color:'#FF8FB1', seq:[0,2,1,3],   title:'물감!',  ab:'지나온 길의 블럭 5개를 가장 앞선 족보의 다음 색으로 칠함'},
   poseidon: {name:'포세이돈',color:'#3FA9F5', seq:[2,2,0],     title:'해일!',  ab:'파란 블럭이 전부 가라앉아 아래쪽에 평평하게 깔림'},
   restock:  {name:'재입고',  color:'#7ED9C6', seq:[],          title:'',      ab:'판을 꾹 누르면 잠시 뒤 모든 블럭 색이 무작위로 바뀜 (6초 쿨타임)', passive:true},
-  colorblind:{name:'색약',   color:'#C9A27E', seq:[1,2,3,0,1], title:'뒤섞임!',ab:'10초 동안 두 색을 같은 색으로 침'},
-  retro:    {name:'레트로',  color:'#D9D9D9', seq:[3,0,1,2],   title:'흑백!',  ab:'10초 동안 흑백이 되는 대신 족보 점수 ×3, 족보 완성마다 2초 연장'},
+  colorblind:{name:'색약',   color:'#C9A27E', seq:[1,2,3,0,1], title:'뒤섞임!',ab:'10초 동안 두 색을 같은 색으로 침 (A=B 표시)'},
+  retro:    {name:'레트로',  color:'#D9D9D9', seq:[3,0,1,2],   title:'흑백!',  ab:'10초 동안 흑백이 되는 대신 족보 점수 ×2, 족보 완성마다 2초 연장(최대 +4초)'},
   // 10/11 2차 (팀원 테스트 파일)
   navigator:{name:'항해사',  color:'#6EC8FF', seq:[],          title:'',      ab:'판의 끝과 끝이 이어짐. 벽 밖으로 나가면 반대편에서 나오고, 매치도 판을 넘어 이어짐', passive:true},
-  twins:    {name:'쌍둥이',  color:'#FFB3C7', seq:[],          title:'',      ab:'족보의 다음 두 칸이 같은 색이면 한 번에 두 칸 진행', passive:true},
-  bounty:   {name:'현상금 사냥꾼',color:'#F5A04A', seq:[],     title:'',      ab:'10초마다 현상금 색이 바뀜. 현상금 색으로 매치하면 +2초', passive:true},
+  twins:    {name:'쌍둥이',  color:'#FFB3C7', seq:[],          title:'',      ab:'족보에 같은 색이 이어지면 한 번에 모두 진행', passive:true},
+  bounty:   {name:'현상금 사냥꾼',color:'#F5A04A', seq:[],     title:'',      ab:'10초마다 현상금 색(배경색)이 바뀜. 현상금 색으로 매치하면 +2초', passive:true},
   sprout:   {name:'새싹 요정',color:'#9BE36D', seq:[],         title:'',      ab:'판의 새싹 블럭 주변 12칸에서는 씨앗이 바로 다 자람', passive:true},
   explorer: {name:'탐험가',  color:'#7FD1B9', seq:[],          title:'',      ab:'3×3 탐험 구역 안에서 매치하면 가장 앞선 족보가 한 칸 더 진행', passive:true},
   echo:     {name:'메아리',  color:'#C7A6FF', seq:[3,2,3,0],   title:'메아리!',ab:'지난 10초 동안 족보로 얻은 점수를 한 번 더 얻음'},
-  architect:{name:'건축가',  color:'#B9C2CF', seq:[3,1,0],     title:'증축!',  ab:'모든 족보 끝에 한 칸씩 덧붙이고 점수를 다시 계산'},
+  architect:{name:'건축가',  color:'#B9C2CF', seq:[3,1],       title:'증축!',  ab:'가장 많이 진행된 족보에 한 칸 덧붙이고 점수를 다시 계산 (최대 5칸)'},
   artisan:  {name:'장인',    color:'#E8C07D', seq:[],          title:'',      ab:'족보가 3칸·4칸 두 장만 나오는 대신 점수 ×1.5', passive:true},
-  runner:   {name:'묘수꾼',  color:'#FF8A3D', seq:[1,0,3,2],   title:'수읽기!',ab:'시간이 멈춤. 8번 움직이거나 6초가 지나면 풀림'},
+  runner:   {name:'묘수꾼',  color:'#FF8A3D', seq:[1,0,3,2],   title:'수읽기!',ab:'시간이 멈춤. 8번 움직이거나 6초가 지나면 풀림(매치하면 6초 다시)'},
   conductor:{name:'지휘자',  color:'#F2E6C9', seq:[0,3,2,1],   title:'지휘!',  ab:'20초 동안 움직일 때만 한 번에 0.5초씩 시간이 줄고, 족보 점수 ×1.5'},
   chameleon:{name:'카멜레온',color:'#5FE0A0', seq:[0,2,1],     title:'변신!',  ab:'10초 동안 족보에 가장 많이 남은 색 칸이 아무 색으로나 진행됨'},
   miner:    {name:'광부',    color:'#C9925E', seq:[1,3],       title:'채굴!',  ab:'다음 2번의 이동은 블럭을 밀지 않고 캐내서 그 색으로 족보 진행 (시간 보너스 없음)'},
-  wanderer: {name:'떠돌이',  color:'#E08BFF', seq:[],          title:'',      ab:'족보 점수 ×2. 10번 안에 못 깨면 판의 무작위 칸으로 순간이동(깨면 다시 10번)', passive:true},
+  wanderer: {name:'떠돌이',  color:'#E08BFF', seq:[],          title:'',      ab:'족보 점수 ×1.5. 10번 안에 못 깨면 판의 무작위 칸으로 순간이동(깨면 다시 10번)', passive:true},
   // 10/13 팀원 신규 4종 + 파키케팔로사우르스 (팀원 색 번호를 우리 번호로 바꿈: 빨0→1 파1→2 노2→0 초3→3)
   zeus:     {name:'제우스',  color:'#FFE14A', seq:[0,0,0,0],   title:'낙뢰!',  ab:'시간이 멈추고 노랑 블럭을 모두 흡수. 흡수한 수만큼 족보를 색 무관하게 4칸 → 3칸 → 2칸 순서로 한 칸씩 채움'},
   arson:    {name:'방화광',  color:'#FF7A3D', seq:[],          title:'',      ab:'빨강 = 불(재생 안 됨, 4초마다 3칸 번짐). 족보 빨강 칸을 빨강으로 채우면 2칸 전진. 파랑 매치로 물방울, 꾹 누르면 물방울 2개로 불 절반 소화', passive:true},
   seer:     {name:'예지안',  color:'#9A82FF', seq:[3,2,0,1],   title:'예언!',  ab:'씨앗이 자랄 색이 보임. 발동하면 판의 같은 색 ㅗ·ㅜ·ㅓ·ㅏ 모양을 모두 매치하고, 모양 수만큼 족보 3개가 모두 전진'},
   racer:    {name:'레이서',  color:'#FF9F45', seq:[],          title:'',      ab:'0.2초마다 바라보는 방향으로 자동 이동, 조작은 방향만 바꿈. 매치하면 같은 방향으로 달린 칸 수 × 0.5초 추가', passive:true},
-  pachy:    {name:'파키케팔로사우르스', color:'#B8A06A', seq:[], title:'',  ab:'판을 꾹 누르면 마지막으로 움직인 방향으로 점점 빨라지며 돌진. 돌진 중 매치하면 돌진한 칸 수에 따라 박치기 점수(40 × 칸 수²)', passive:true}
+  pachy:    {name:'파키케팔로사우르스', color:'#B8A06A', seq:[], title:'',  ab:'스와이프한 손가락을 떼지 않으면 그 방향으로 점점 빨라지며 돌진. 돌진 중 매치하면 박치기 점수(40 × 칸 수², 6칸까지)', passive:true}
 };
 // 등급: 상점 캐릭터는 일반·희귀, 뽑기 캐릭터는 희귀·영웅·전설
 const RARITY = {N:{name:'기본'}, R:{name:'희귀'}, SR:{name:'영웅'}, SSR:{name:'전설'}, UR:{name:'신화'}, T:{name:'체험권'}};
 // 등급(기본 제외 4단계): 희귀 → 영웅 → 전설 → 신화. 30종 피라미드 12 · 9 · 6 · 3 (10/11 4차, 배정 임시)
 // 로스터에서 뺀 후보(정의는 남겨 둠): 정비공·쌍둥이·새싹 요정·메아리·카멜레온·광부
+// 10/14: 왕·지휘자·재입고 삭제, 양손잡이는 이스터에그(로스터 밖), 뱀파이어 → 신화, 장인 → 희귀
 const RAR = {gardener:'R', wall:'R', marathon:'R', pickpocket:'R', bounty:'R',
-  sewer:'R', gambler:'R', clock:'R', bomber:'R', king:'R', alchemist:'R', fever:'R',
-  joker:'SR', vampire:'SR', mirror:'SR', painter:'SR', poseidon:'SR', restock:'SR', navigator:'SR', explorer:'SR', artisan:'SR',
-  photo:'SSR', colorblind:'SSR', retro:'SSR', architect:'SSR', conductor:'SSR', wanderer:'SSR',
-  madan:'UR', ambi:'UR', runner:'UR',
+  sewer:'R', gambler:'R', clock:'R', bomber:'R', alchemist:'R', fever:'R', artisan:'R',
+  joker:'SR', mirror:'SR', painter:'SR', poseidon:'SR', navigator:'SR', explorer:'SR',
+  photo:'SSR', colorblind:'SSR', retro:'SSR', architect:'SSR', wanderer:'SSR',
+  madan:'UR', vampire:'UR', runner:'UR',
   zeus:'SR', racer:'SR', pachy:'SR', seer:'SSR', arson:'SSR'}; // 10/13 신규 5종 등급 임시
 const RAR_ORDER = ['R','SR','SSR','UR'];
 const rarOf = id => RAR[id]||'N';
 const rcOf = id => `var(--r${rarOf(id)})`;
 const MADAN = {shots:6, time:8, score:1000, regen:30, hitT:0};
 const DEVIL = {time:'시간 −8초', score:'점수 −1,000', regen:'재생 30초'};
-const VAMP = {dur:6, t:1}, MR_BONUS = 2, HOLD_MS = 500, HOLD_SHOW = 180;
+const VAMP = {dur:6, t:1}, MR_BONUS = 2, MR_CHAIN_GAP = 15, HOLD_MS = 500, HOLD_SHOW = 180;
 // 10/11 봇 밸런스 1차: 시계공 5→4초, 왕 15→10초, 사진사 10→7초(배율 +0.25→+0.4), 피버 족보 100→300점, 와일드 1→2회, 변성 4→5개
-const FEVER_DUR = 10, FREEZE_DUR = 4, KING_DUR = 10, BOMB_N = 3, PHOTO_DUR = 7;
+const FEVER_DUR = 10, FREEZE_DUR = 4, KING_DUR = 10, BOMB_N = 5, PHOTO_DUR = 7;
+// 10/14 축제꾼: 피버 동안 색 상관없이 매치마다 스택 +1, 리필 2배 빠르게, 끝날 때 FEVER_STACK × n(n+1)/2 한 번에
+// 10/14 사진사: 족보 배율 대신 사진 속 매치 수 보너스 PHOTO_BASE × 2^(n−1) (1회 250 · 2회 500 · 3회 1,000 …, 최대 6회분)
+const FEVER_STACK = 50, FEVER_REFILL = 2, VAMP_REFILL = 2.5, PHOTO_BASE = 250, PHOTO_CAP = 6;
 const FEVER_PTS = 280, WILD_N = 2, TRANS_N = 5, PHOTO_STEP = 0.5, PHOTO_MAX = 4, GAMBLE_X = 2, WALL_T = 0.5, MADAN_X = 1.25;
+const MIRROR_X = 1.5, PICK_PTS = 100, GAMBLE_CAP = 2, MADAN_SEC = 18, SEWER_N = 2, GARDEN_HINT = 5;
 const COIN_VALUE = 10, COIN_LIFE = 15, COIN_MAX = 3, COIN_CHAIN_GAP = 4;
 
 /* ================= 진행: 계정 레벨 = 보드 업그레이드 · 업적 · 해금 (브라우저에 저장) ================= */
@@ -1321,7 +1341,7 @@ const ACH = [
 
   ...chainOf('king','B',['대각선 이동으로 매치','행차 한 번에 대각선 이동 매치 5회','한 판에 대각선 이동 매치 20회'],[1,5,20]),
   ...chainOf('alchemist','B',['변성 후 3수 안에 족보 완성','변성 직후 다음 매치로 길이 4 족보 완성','한 판에 변성 후 3수 안에 완성한 족보 20개'],[1,1,20]),
-  ...chainOf('fever','B',['피버 한 번에 족보 4개 완성','피버 한 번에 족보 8개 완성','한 판에 피버 점수 5,000'],[4,8,5000]),
+  ...chainOf('fever','B',['피버 한 번에 5스택','피버 한 번에 10스택','한 판에 피버 점수 5,000'],[5,10,5000]),
   ...chainOf('joker','B',['와일드로 족보 완성','와일드 한 번에 족보 2개 완성','와일드 한 번에 족보 3개 완성'],[1,2,3]),
   ...chainOf('photo','B',['사진 한 장 안에서 매치 4회','사진 한 장 안에서 매치 9회','사진 한 장 안에서 족보 5개 완성'],[4,9,5]),
   ...chainOf('mirror','B',['거울세계에서 족보 완성','한 판에 세계 전환 10회','한 판에 거울세계에서 족보 20개 완성'],[1,10,20]),
@@ -1674,13 +1694,17 @@ const filled = s => s.p+(s.b||0);
 const advS = s => { if (mirror) s.b=(s.b||0)+1; else s.p++; };
 const isDone = s => filled(s)>=s.seq.length;
 const gotK = (s,k) => k<s.p || k>=s.seq.length-(s.b||0);
+// 10/14 족보 점수: 길이 기본점(2칸 100 · 3칸 300 · 4칸 600 · 5칸 1000) × (1 + 0.25 × 바로 앞과 같은 색인 칸 수)
+// (이전: d = 길이 + 반복, 100·d(d−1)/2 → 4칸 같은 색 2,100점까지 벌어짐)
+const REP_BONUS = 0.25;
+function recipePts(seq){ const L=seq.length; let rep=0; for (let i=1;i<L;i++) if (seq[i]===seq[i-1]) rep++; return Math.round(cfg.base*L*(L-1)/2*(1+REP_BONUS*rep)); }
 function difficulty(seq){ let d=seq.length; for(let i=1;i<seq.length;i++) if(seq[i]===seq[i-1]) d++; return d; }
 const FIXED_LEN=[2,3,4];
 function makeCard(i){
   const w=LEN_MIX[cfg.lenMix], x=RNG()*(w[0]+w[1]+w[2]);
   const L = isChr('artisan') ? [3,4][i] : cfg.lenMode==='fixed' ? FIXED_LEN[i] : x<w[0] ? 2 : x<w[0]+w[1] ? 3 : 4;
   const counts=countColors();
-  const pool = feverOn ? stash : slots;
+  const pool = slots;
   let seq;
   for (let t=0;t<40;t++){
     seq=Array.from({length:L},()=>rnd(cfg.colors));
@@ -1690,7 +1714,7 @@ function makeCard(i){
     break;
   }
   const d=difficulty(seq);
-  return {seq, p:0, b:0, d, pts:cfg.base*d*(d-1)/2};
+  return {seq, p:0, b:0, d, pts:recipePts(seq)};
 }
 function makeFeverCard(used){
   const counts=countColors();
@@ -1708,8 +1732,8 @@ function onClear(col, opt={}){
   if (usedWild){ slots.forEach((s,i)=>{ advS(s); adv.add(i); }); wild--; }
   else if (cfg.advance==='all'){ slots.forEach((s,i)=>{ if (need(s)){ if (canon(needOf(s))!==col){ R.chN++; R.chA++; achSet('chameleon_1',1); achSet('chameleon_2',R.chA); achSet('chameleon_3',R.chN); } advS(s); adv.add(i);
     if (isChr('arson') && col===RED && !isDone(s)){ advS(s); ar.doubles++; }
-    if (isChr('twins') && !isDone(s) && s.seq[s.p]===s.seq[s.p-1]){ advS(s); R.twN++; achSet('twins_1',1); achSet('twins_2',R.twN); achSet('twins_3',R.twN);
-      if (!photoOn && cardEls[i]){ const [x,y]=centerOf(cardEls[i]); floatText('×2', x, y-10, {size:22, color:chrColor()}); } } } }); }
+    let tw=0; while (isChr('twins') && !isDone(s) && s.p>0 && s.seq[s.p]===s.seq[s.p-1] && tw<6){ tw++; advS(s); R.twN++; achSet('twins_1',1); achSet('twins_2',R.twN); achSet('twins_3',R.twN);
+      if (!photoOn && cardEls[i]){ const [x,y]=centerOf(cardEls[i]); floatText(`×${tw+1}`, x, y-10, {size:22, color:chrColor()}); } } } }); }
   else {
     let best=-1,bv=-1;
     slots.forEach((s,i)=>{ if (needOf(s)===col){ const v=(filled(s)+1)/s.seq.length; if (v>bv){bv=v;best=i;} } });
@@ -1733,10 +1757,12 @@ function onClear(col, opt={}){
   let gained=0;
   const events=[];
   // 사진 속 콤보: 사진 안에서 n번째 매치로 완성한 족보는 점수 ×(1 + PHOTO_STEP×(n−1)), 최대 ×PHOTO_MAX
-  const pm = photoOn ? photoMult() : 1;
+  const pm = 1; // 10/14: 사진 속 족보 배율 폐지 (끝날 때 매치 수 보너스로)
   for (const i of done){
     const s=slots[i];
-    const x3=x3set.has(i), pts=Math.round(s.pts*(x3?GAMBLE_X:1)*pm*(opt.shot?MADAN_X:1)*bonusX());
+    const meet=isChr('mirror') && s.p>0 && (s.b||0)>0;   // 거울: 앞뒤에서 채워 가운데서 만나면 ×MIRROR_X
+    const x3=x3set.has(i), pts=Math.round(s.pts*(x3?GAMBLE_X:1)*pm*(opt.shot?MADAN_X:1)*(meet?MIRROR_X:1)*bonusX());
+    if (meet && !photoOn && cardEls[i]){ const [x,y]=centerOf(cardEls[i]); floatText(`만남 ×${MIRROR_X}`, x, y-26, {size:18, color:'#BFE0FF'}); }
     if (pm>1) photoBonus+=pts-Math.round(s.pts*(x3?GAMBLE_X:1));
     gained+=pts; if (x3) multBonus+=pts-s.pts; if (s.fever) feverPts+=pts;
     if (!s.fever) byLen[s.seq.length]=(byLen[s.seq.length]||0)+1;
@@ -1744,7 +1770,7 @@ function onClear(col, opt={}){
   }
   for (const i of done){
     const used=slots.filter((s,j)=>j!==i && !done.includes(j)).map(s=>s.seq[0]);
-    slots[i] = feverOn ? makeFeverCard(used) : makeCard(i);
+    slots[i] = makeCard(i);
   }
   if (done.length){ recipeCost.push(movesSinceRecipe); movesSinceRecipe=0; stat('recipes',done.length); }
   score+=gained;
@@ -1756,7 +1782,7 @@ function onClear(col, opt={}){
   if (done.length && !photoOn) setTimeout(()=>sfx('recipe'),60);
   if (done.length) pickpocket();
   if (conductOn() && done.length){ R.cdR+=done.length; achSet('conductor_1',1); achSet('conductor_2',R.cdR); R.cdP+=gained; achSet('conductor_3',R.cdP); }
-  if (retroOn() && done.length){ retroUntil+=done.length*RETRO.ext; R.rtR+=done.length; achSet('retro_1',1); achSet('retro_2',R.rtR); R.rtP+=gained; achSet('retro_3',R.rtP); }
+  if (retroOn() && done.length){ const add=Math.min(done.length*RETRO.ext, RETRO.extMax-retroExt); retroUntil+=add; retroExt+=add; R.rtR+=done.length; achSet('retro_1',1); achSet('retro_2',R.rtR); R.rtP+=gained; achSet('retro_3',R.rtP); }
   if (cbOn() && done.length){ R.cbR+=done.length; achSet('colorblind_3',R.cbR); }
   if (isChr('cursed')){ R.csR+=done.length; achSet('cursed_1',R.csR); }
   achAdd('t_gardener', done.length);
@@ -1768,10 +1794,8 @@ function onClear(col, opt={}){
   if (usedWild){ achSet('joker_1',Math.min(1,done.length)); achSet('joker_2',done.length); achSet('joker_3',done.length); }
   if (x3set.size){ if (events.some(e=>e.x3 && e.old.seq.length===4)) achSet('gambler_1',1); achSet('gambler_2',x3set.size); }
   achSet('gambler_3', multBonus);
-  if (feverOn && done.length){ R.fevR+=done.length; achSet('fever_1',R.fevR); achSet('fever_2',R.fevR); }
   if (mirror && done.length){ achSet('mirror_1',1); R.mRec+=done.length; achSet('mirror_3',R.mRec); }
   if (madanOn() && done.length){ R.mtRec+=done.length; achSet('madan_2',R.mtRec); }
-  achSet('fever_3', feverPts);
 
   // 연출 (사진 중이면 쌓아둠)
   if (photoOn){
@@ -1836,11 +1860,11 @@ function useAbility(){
       startPhoto(); return `찰칵: ${PHOTO_DUR}초`;
     case 'gardener':
       for (const p of pending) for (const id of p.ids) mature(blocks.get(id));
-      pending=[]; return '촉진: 씨앗 전부 성장';
+      pending=[]; gHintUntil=elapsed+GARDEN_HINT; setTimeout(gardenHint, reduceMotion?0:380); return '촉진: 씨앗 전부 성장 · 다음 매치 칸 표시';
     case 'clock':
       frozenUntil=Math.max(frozenUntil,elapsed)+FREEZE_DUR; return `정지: ${FREEZE_DUR}초`;
     case 'gambler':
-      mult++; syncCards(); return mult>1 ? `올인: 다음 완성 ×${GAMBLE_X} (${mult}회)` : `올인: 다음 완성 족보 ×${GAMBLE_X}`;
+      mult=Math.min(GAMBLE_CAP, mult+1); syncCards(); return mult>1 ? `올인: 다음 완성 ×${GAMBLE_X} (${mult}회)` : `올인: 다음 완성 족보 ×${GAMBLE_X}`;
     case 'joker':
       wild+=WILD_N; syncCards(); return `와일드 ${wild}회 준비`;
     case 'fever':
@@ -1850,13 +1874,13 @@ function useAbility(){
     case 'madan':
       return madanArm();
     case 'sewer':
-      ndl={armed:true, path:[[player.r,player.c]], visited:new Set([player.r+','+player.c])};
+      ndl={armed:true, left:SEWER_N, path:[[player.r,player.c]], visited:new Set([player.r+','+player.c])};
       renderTrail(); sfx('needle');
-      return '바늘: 블럭 하나를 한 바퀴 감싸기';
+      return `바늘 ${SEWER_N}번: 블럭 하나를 한 바퀴 감싸기`;
     case 'vampire':
       startVamp(); return `피의 시간: ${VAMP.dur}초 동안 모든 블럭이 빨강`;
     case 'mechanic': return mechanicAdvance();
-    case 'painter': paintCharges=Math.min(PAINT_MAX, paintCharges+1); return `물감 ${paintCharges}개 · 판을 꾹 눌러 칠하기`;
+    case 'painter': return paint();
     case 'poseidon': return sinkBlue();
     case 'portal': return startPortal();
     case 'conductor': return startConduct();
@@ -1872,17 +1896,37 @@ function useAbility(){
   }
   return '';
 }
+let feverStack=0;
 function startFever(){
   if (feverOn){ feverUntil+=FEVER_DUR; return; }
-  feverOn=true; feverUntil=elapsed+FEVER_DUR; stash=slots;
-  const ns=[]; for (let i=0;i<stash.length;i++) ns.push(makeFeverCard(ns.map(s=>s.seq[0])));
-  slots=ns;
-  for (let i=0;i<slots.length;i++) swapCard(i,'out',80*i);
+  feverOn=true; feverUntil=elapsed+FEVER_DUR; feverStack=0;
+  document.body.classList.add('fever'); feverBadge();
 }
-function endFever(){
-  feverOn=false; slots=stash; stash=null;
-  for (let i=0;i<slots.length;i++) swapCard(i,'out',80*i);
-  $('#msg').textContent='피버 종료: 원래 족보 복귀';
+const refillRate = () => feverOn ? FEVER_REFILL : vampOn() ? VAMP_REFILL : 1;
+const feverPayout = n => FEVER_STACK*n*(n+1)/2;
+function feverHit(){             // 피버 중 매치 1회
+  feverStack++; R.fevR=feverStack; achSet('fever_1',feverStack); achSet('fever_2',feverStack);
+  feverBadge(true);
+  if (!photoOn && settings.sound){ audioInit(); if (AC){ const t=AC.currentTime+.005, f=330*Math.pow(2,Math.min(18,feverStack)/12); tone('triangle',f,f*1.5,.16,.22,t); } }
+}
+function feverBadge(pop){
+  let b=board.querySelector('.fbadge');
+  if (!feverOn){ if (b) b.remove(); return; }
+  if (!b){ b=document.createElement('div'); b.className='fbadge'; board.appendChild(b); }
+  b.innerHTML=`<b>${feverStack}</b><small>+${feverPayout(feverStack).toLocaleString()}</small>`;
+  if (pop && !reduceMotion) b.animate([{scale:1.5,filter:'brightness(2)'},{scale:1,filter:'none'}],{duration:220,easing:'cubic-bezier(.2,.9,.3,1.4)'});
+}
+function endFever(quiet){
+  feverOn=false; document.body.classList.remove('fever');
+  const n=feverStack, pts=feverPayout(n); feverStack=0; feverBadge();
+  if (!n) return;
+  score+=pts; feverPts+=pts; scoreLog.push({t:elapsed, pts, clear:clears}); achSet('fever_3', feverPts);
+  if (quiet || photoOn){ shownTarget+=pts; return; }
+  const [bx,by]=centerOf(board), gid=gameId, cc=chrColor();
+  showBanner(`피버 ${n}스택!`, `+${pts.toLocaleString()}`);
+  floatText(`+${pts.toLocaleString()}`, bx, by, {size:40+Math.min(20,n*2), color:cc, to:$('#rScore'), onArrive:()=>{ if (gid!==gameId) return; shownTarget+=pts; bump($('#rScore')); }});
+  for (let k=0;k<4;k++) burst(bx,by,[cc,'#FFD23F','#FFF4C2',COL[k%4]][k],30+n*3,500+n*30,7);
+  flashScreen(cc); if (!reduceMotion) retrigger($('#stage'),'shake-big'); sfx('legend');
 }
 // 연금술사: 논리상 색은 즉시 바뀌고, 화면에서는 하나씩 순서대로 링 → 뒤집기 → 새 색으로 번쩍.
 // 바뀐 블럭은 캐릭터 색 테두리가 잠시 남아서 어떤 게 바뀌었는지 보임.
@@ -1890,8 +1934,9 @@ function transmute(){
   let best=0,bv=-1;
   slots.forEach((s,i)=>{ const v=filled(s)/s.seq.length; if (v>bv){bv=v;best=i;} });
   const target=needOf(slots[best]);
-  const cands=shuffle([...blocks.values()].filter(b=>b.color!==null && b.color!==target &&
-    players.every(pl=>Math.abs(b.r-pl.r)+Math.abs(b.c-pl.c)>1)));
+  const dist = b => Math.min(...players.map(pl=>Math.abs(b.r-pl.r)+Math.abs(b.c-pl.c)));
+  const cands=shuffle([...blocks.values()].filter(b=>b.color!==null && b.color!==target && !b.sprout && dist(b)>1))
+    .sort((a,b)=>dist(a)-dist(b));   // 10/14: 내 근처(바로 옆 제외)부터
   const picked=cands.slice(0,TRANS_N), gid=gameId;
   picked.forEach((b,k)=>{
     b.color=target;
@@ -1990,11 +2035,12 @@ function photoStep(first){
   photoEl.querySelector('polyline').setAttribute('points', photoPath.map(([r,c])=>`${(c+.5)*cellPx},${(r+.5)*cellPx}`).join(' '));
 }
 const photoCombo = () => veil.filter(e=>e.kind==='match').length;
-const photoMult = (n=photoCombo()) => Math.min(PHOTO_MAX, 1+PHOTO_STEP*Math.max(0,n-1));
+const photoMult = () => 1;
+const photoBonusOf = n => n>0 ? PHOTO_BASE*Math.pow(2, Math.min(PHOTO_CAP,n)-1) : 0;
 function photoHud(){
   if (!photoEl) return;
   const n=photoCombo();
-  const cnt=photoEl.querySelector('.cnt'), txt=n?`${n}연속  다음 족보 ×${photoMult(n+1).toFixed(2).replace(/\.?0+$/,'')}`:'다음 족보 ×1';
+  const cnt=photoEl.querySelector('.cnt'), txt=n?`${n}연속 · +${photoBonusOf(n).toLocaleString()}`:`매치마다 2배 · +${PHOTO_BASE}부터`;
   if (cnt.textContent!==txt){ cnt.textContent=txt; bump(cnt); }
   photoEl.querySelector('.film i').style.transform=`scaleX(${Math.max(0,(photoUntil-elapsed)/PHOTO_DUR)})`;
 }
@@ -2031,7 +2077,13 @@ function endPhoto(){
     if (tSum>0){ const tEl=$('#rTime'), [tx,ty]=centerOf(tEl); floatText(`+${fmt(tSum)}`, tx+tEl.offsetWidth*0.6, ty, {size:24, color:'#E6F0F2'}); bump(tEl); }
     if (coinSum){ const [bx,by]=centerOf(board); floatText(`+${coinSum}`, bx, by+40, {size:28, color:'#FFD23F', to:$('#rCoin'),
       onArrive:()=>{ if (gid!==gameId) return; coinShown+=coinSum; bump($('#rCoin')); }}); }
-    if (matches.length) showBanner(`${matches.length}연속!`, done?`족보 ${done}개 완성, +${pts}점 (최대 ×${photoMult(matches.length).toFixed(2).replace(/\.?0+$/,'')})`:'완성된 족보 없음');
+    if (matches.length){
+      const bonus=photoBonusOf(matches.length), [bx,by]=centerOf(board);
+      score+=bonus; photoBonus+=bonus; scoreLog.push({t:elapsed, pts:bonus, clear:clears});
+      showBanner(`${matches.length}연속!`, `사진 보너스 +${bonus.toLocaleString()}`+(done?` · 족보 ${done}개`:''));
+      floatText(`+${bonus.toLocaleString()}`, bx, by, {size:34+matches.length*4, color:'#FFFFFF', to:$('#rScore'),
+        onArrive:()=>{ if (gid!==gameId) return; shownTarget+=bonus; bump($('#rScore')); }});
+    }
     $('#msg').textContent=`사진 해제: 매치 ${matches.length}회, 족보 ${done}개`;
   }, 140+matches.length*gap);
 }
@@ -2152,7 +2204,7 @@ function breakCard(e){
     to:$('#rScore'), onArrive:()=>{ if (gid!==gameId) return; shownTarget+=e.pts; bump($('#rScore')); }});
   if (big) floatText(`×${GAMBLE_X}!`, x, y-26, {size:34, color:chrColor()});
   if (e.old.d>=4 || big) retrigger($('#boardwrap'),'shake');
-  later(i,()=>{ cardEls[i].classList.add('break'); later(i,()=>finishCard(i),300); },120);
+  later(i,()=>{ cardEls[i].classList.add('break'); later(i,()=>finishCard(i),200); },60);
 }
 function swapCard(i,mode,delay=0){
   if (animating[i]) return; // 부서지는 중이면 그 애니메이션이 끝날 때 현재 slots[i]로 다시 그림
@@ -2297,7 +2349,7 @@ function tutMatchStep(){
 function tutRecipeStep(){
   tut.step='recipe';
   const a=rnd(cfg.colors), b=(a+1+rnd(cfg.colors-1))%cfg.colors, seq=[a,b], d=difficulty(seq);
-  slots[0]={seq, p:0, d, pts:cfg.base*d*(d-1)/2};
+  slots[0]={seq, p:0, d, pts:recipePts(seq)};
   syncCards(); refreshCue && refreshCue();
   tutSetup(a);
   tutSay(`위 <b>족보</b> 순서대로 ${sw(a)} → ${sw(b)} 를 깨면 <b>점수</b>를 얻어요.`);
@@ -2339,7 +2391,7 @@ function newGame(){
   const tutRun=wantTut;
   runStage = tutRun ? null : cfg.prog==='stage' ? boardLv() : null;
   if (tutRun) Object.assign(cfg, {n:7, colors:3, fix:75, slots:1, rf0:2, rf1:2});
-  if (runStage){ const st=STAGES[runStage-1]; Object.assign(cfg, {n:7, colors:st.colors, fix:st.fix, slots:st.slots, rf0:st.rf[0], rf1:st.rf[1]}); }
+  if (runStage){ const st=STAGES[runStage-1]; Object.assign(cfg, {n:BOARD_N, colors:st.colors, fix:st.fix, slots:st.slots, rf0:st.rf[0], rf1:st.rf[1]}); }
   else if (!tutRun) Object.assign(cfg, {...free, slots:3, rf0:cfg.rd+cfg.gt, rf1:cfg.rd+cfg.gt});
   resetRun(); runLog=[];
   board.innerHTML='';
@@ -2360,6 +2412,7 @@ function newGame(){
   mt=null; ndl=null; vamp=null; mirror=false; switching=false; revived=false; hold=null; wpEls=[];
   mr = isChr('marathon') ? {target:0, matched:false} : null;
   document.body.classList.toggle('nav', isChr('navigator'));
+  document.body.classList.toggle('ambi', isChr('ambi'));
   document.body.classList.remove('madan','vamp','mirror'); $('#spot').classList.remove('on'); resetNew(); resetNew2(); resetNew4(); chamCol=-1; chamUntil=0; mineCharges=0; document.body.classList.remove('cham');
   // 이전 판 연출 정리: 배너·섬광은 화면이 다시 보일 때 애니메이션이 재생되므로 클래스를 떼고, 떠 있는 숫자·파편도 비움
   $('#banner').classList.remove('on'); $('#flash').classList.remove('on');
@@ -2505,9 +2558,10 @@ function resolve(){
   let t=vampOn() ? VAMP.t : clearGain(clears)*(boom?2:1)*(m.cells.length===3?WALL_T:1);
   if (hunted){ t+=BOUNTY.bonus; R.bhN++; achSet('bounty_1',1); achSet('bounty_2',R.bhN); achSet('bounty_3',R.bhN);
     if (!photoOn){ const [x,y]=cellCenter(player.r,player.c); floatText(`현상금 +${fmt(BOUNTY.bonus)}초`, x, y-24, {size:18, color:COL[col]}); } }
-  if (runnerOn){ t=0; R.rnA++; R.rnC++; achSet('runner_1',R.rnC); achSet('runner_2',R.rnA); achSet('runner_3',R.rnC); }
+  if (runnerOn){ t=0; runnerUntil=elapsed+RUNNER_SEC; R.rnA++; R.rnC++; achSet('runner_1',R.rnC); achSet('runner_2',R.rnA); achSet('runner_3',R.rnC); }
   if (wrapOn() && onEdge()){ R.nvE++; achSet('navigator_2',R.nvE); }
   timeLeft+=t; clearTime+=t;
+  if (feverOn && !vampOn()) feverHit();
   if (isChr('racer') && racer.streak>0){   // 레이서: 같은 방향으로 달린 칸 수 × 0.5초
     const b=racer.streak*RACER.streakBonus; timeLeft+=b; clearTime+=b; racer.bonus+=b; racer.best=Math.max(racer.best,b);
     if (!photoOn){ const [x,y]=cellCenter(player.r,player.c); floatText(`질주 +${fmt(b)}s`, x, y-30, {size:16+Math.min(8,racer.streak), color:chrColor()}); }
@@ -2607,12 +2661,12 @@ function recoil(power=6){
 function passiveText(){
   if (!chr) return '';
   if (chr.id==='wall') return '벽 3방향 매치';
-  if (chr.id==='marathon' && mr) return `깃발 ${['↖','↙','↘','↗'][mr.target]}${mr.matched?' 준비':''}`;
+  if (chr.id==='marathon' && mr){ const nx = R.mrLast!=null && elapsed-R.mrLast<=MR_CHAIN_GAP ? Math.min(MR_BONUS+2,(R.mrBon||MR_BONUS)+1) : MR_BONUS; return `깃발 ${['↖','↙','↘','↗'][mr.target]}${mr.matched?' 준비':''} · +${nx}초`; }
   if (chr.id==='mirror') return mirror ? '거울세계' : '현실';
   if (chr.id==='ambi') return `왼 ${R.hands[0]} · 오 ${R.hands[1]}`;
   if (chr.id==='restock') return switching ? '섞는 중' : gclock<restockAt ? `${fmt(restockAt-gclock)}초` : '꾹 눌러 재입고';
   if (chr.id==='pickpocket') return `끌어온 금화 ${R.ppN||0}`;
-  if (chr.id==='bounty') return bountyCol>=0 ? `현상금 ${CN[bountyCol]}` : '';
+  if (chr.id==='bounty') return bountyCol>=0 ? `<span class="eq"><i style="background:${COL[bountyCol]}"></i></span><small>현상금 ${CN[bountyCol]} · ${Math.max(0,Math.ceil(bountyNext-elapsed))}초</small>` : '';
   if (chr.id==='explorer') return zone ? '구역을 찾아가세요' : `새 구역까지 ${fmt(Math.max(0,zoneAt-elapsed))}초`;
   if (chr.id==='wanderer') return '';
   if (chr.id==='artisan') return `족보 2장 · ×${ARTISAN_X}`;
@@ -2629,7 +2683,7 @@ function spotMove(){
 }
 function madanArm(){
   const devil=['time','score','regen'][rnd(3)];
-  mt={armed:true, shots:0, devil, hits:0, log:[], ids:[], firing:false};
+  mt={armed:true, shots:0, devil, hits:0, log:[], ids:[], firing:false, until:elapsed+MADAN_SEC};
   R.mtRec=0;
   // 재생 중인 칸을 전부 즉시 블럭으로 (저주받은 칸 제외)
   for (const p of pending) for (const id of p.ids){ const b=blocks.get(id); if (b && !b.cursed) mature(b); }
@@ -2760,7 +2814,10 @@ function stitch(b){
   setTimeout(()=>{
     if (gid!==gameId || dead) return;
     if (svg){ svg.classList.remove('cinch'); }
-    ndl=null; renderTrail();
+    // 바늘이 남았으면 지금 자리에서 다시 장전 (한 블럭씩 두 번)
+    if (ndl && ndl.left>1) ndl={armed:true, left:ndl.left-1, path:[[player.r,player.c]], visited:new Set([player.r+','+player.c])};
+    else ndl=null;
+    renderTrail();
     if (!blocks.has(b.id) || b.color===null){ refreshHud(); return; }
     const col=b.color, r=b.r, c=b.c, [x,y]=cellCenter(r,c);
     let coins=0;
@@ -2783,9 +2840,9 @@ function stitch(b){
 
 /* ================= 10/11 신규 캐릭터 ================= */
 // 정비공 · 소매치기 · 화가 · 포세이돈 · 포탈 · 재입고 · 지휘자 · 색약 · 레트로 · 저주받은 자 (수치 임시, 밸런스 미조정)
-const CONDUCT = {dur:20, cost:0.5, x:1.5}, CB_DUR = 10, RETRO = {dur:10, x:3, ext:2}, PORTAL_DUR = 8;
-const CURSE = {t:1.3, x:1.5}, PAINT_N = 3, PAINT_MAX = 2, RESTOCK = {delay:1.2, cd:6}, PICK_R = 2;
-let paintCharges=0, conductUntil=0, cbUntil=0, cbPair=null, retroUntil=0, portalUntil=0, restockAt=0;
+const CONDUCT = {dur:20, cost:0.5, x:1.5}, CB_DUR = 10, RETRO = {dur:10, x:2, ext:2, extMax:4}, PORTAL_DUR = 8;
+const CURSE = {t:1.3, x:1.5}, PAINT_N = 5, PAINT_MAX = 2, RESTOCK = {delay:1.2, cd:6}, PICK_R = 2;
+let retroExt=0, paintCharges=0, conductUntil=0, cbUntil=0, cbPair=null, retroUntil=0, portalUntil=0, restockAt=0;
 const conductOn = () => started && elapsed<conductUntil;
 const cbOn = () => !!cbPair && elapsed<cbUntil;
 const retroOn = () => started && elapsed<retroUntil;
@@ -2829,6 +2886,9 @@ function pickpocket(){
   }
   if (!got) return;
   runCoins+=coins; sfx('coin'); passiveFx(true);
+  { const pts=got*PICK_PTS; score+=pts; scoreLog.push({t:elapsed, pts, clear:clears});
+    if (!photoOn){ const [x,y]=cellCenter(player.r,player.c), gid=gameId; floatText(`+${pts}`, x, y-30, {size:22, color:'#FFE9A8', to:$('#rScore'), onArrive:()=>{ if (gid!==gameId) return; shownTarget+=pts; bump($('#rScore')); }}); }
+    else shownTarget+=pts; }
   R.ppN+=got; achSet('pickpocket_1',1); achSet('pickpocket_2',got); achSet('pickpocket_3',R.ppN);
 }
 // 화가 사용: 물감 1개를 써서 칠함
@@ -2901,7 +2961,7 @@ function startColorblind(){
   cbUntil=Math.max(cbUntil,elapsed)+CB_DUR; document.body.classList.add('cb');
   syncCards(); return `색약: ${CB_DUR}초 동안 두 색이 같은 색`;
 }
-function startRetro(){ if (!retroOn()) R.rtR=0; retroUntil=Math.max(retroUntil,elapsed)+RETRO.dur; document.body.classList.add('retro'); return `레트로: ${RETRO.dur}초 동안 점수 ×${RETRO.x}, 족보 완성마다 +${RETRO.ext}초`; }
+function startRetro(){ if (!retroOn()){ R.rtR=0; retroExt=0; } retroUntil=Math.max(retroUntil,elapsed)+RETRO.dur; document.body.classList.add('retro'); return `레트로: ${RETRO.dur}초 동안 점수 ×${RETRO.x}, 족보 완성마다 +${RETRO.ext}초(최대 +${RETRO.extMax}초)`; }
 function startConduct(){ if (!conductOn()){ R.cdR=0; } conductUntil=Math.max(conductUntil,elapsed)+CONDUCT.dur; document.body.classList.add('conduct'); return `지휘: ${CONDUCT.dur}초 동안 움직일 때만 시간이 흐름`; }
 function startPortal(){ if (!portalOn()) R.ptA=0; portalUntil=Math.max(portalUntil,elapsed)+PORTAL_DUR; document.body.classList.add('portal'); return `포탈: ${PORTAL_DUR}초 동안 벽을 넘어감`; }
 function tickNew(){
@@ -2914,7 +2974,7 @@ function tickNew(){
 /* ================= 10/11 신규 캐릭터 2차 (팀원 테스트 파일에서 이식) ================= */
 // 항해사 · 쌍둥이 · 현상금 사냥꾼 · 새싹 요정 · 탐험가 · 메아리 · 건축가 · 장인 · 묘수꾼 · 떠돌이 (수치는 원본 기본값)
 const BOUNTY = {every:10, bonus:2}, EXPLORE_DELAY = 5, ECHO = {win:10, ratio:1}, RUNNER_MOVES = 8, RUNNER_SEC = 6;
-const ARTISAN_X = 1.5, WANDER = {every:10, x:2};
+const ARTISAN_X = 1.5, WANDER = {every:10, x:1.5};
 const SPROUT_RANGE=[[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1],[-2,0],[2,0],[0,-2],[0,2]];
 const LEAF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-8" stroke="#9BE36D" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M12 13c0-4.2 3-7.2 8-7.2 0 4.2-3 7.2-8 7.2z" fill="#9BE36D"/><path d="M12 15.5c0-3.2-2.5-5.8-7-5.8 0 3.2 2.5 5.8 7 5.8z" fill="#C6F36B"/></svg>';
 const CN = ['노랑','빨강','파랑','초록','보라'];
@@ -3003,13 +3063,19 @@ function echoAbility(){
   return `메아리: 지난 ${ECHO.win}초 점수 +${g}`;
 }
 // ---- 건축가 ----
+const ARCH_MAX = 5;
 function extendCards(){
-  let n=0;
-  slots.forEach((s,i)=>{ if (s.ext || s.fever) return;
-    s.seq.push(rnd(cfg.colors)); s.d=difficulty(s.seq); s.pts=cfg.base*s.d*(s.d-1)/2; s.ext=true; n++;
-    if (cardEls[i]) cardEls[i]._card=null; });
+  let best=-1, bv=-1;
+  slots.forEach((s,i)=>{ if (s.fever || isDone(s) || s.seq.length>=ARCH_MAX) return; const v=filled(s)/s.seq.length; if (v>bv || (v===bv && s.pts>slots[best].pts)){ bv=v; best=i; } });
+  if (best<0) return '증축: 더 늘릴 족보 없음';
+  const s=slots[best], at=s.seq.length-(s.b||0), col=rnd(cfg.colors), old=s.pts;
+  s.seq.splice(at,0,col); if (s.orig) s.orig.splice(at,0,col);
+  if (vampOn() && s.orig) s.seq[at]=1;
+  s.d=difficulty(s.seq); s.pts=recipePts(s.orig||s.seq); s.ext=true;
+  if (cardEls[best]){ cardEls[best]._card=null; }
   syncCards();
-  return n ? `증축: 족보 ${n}장에 한 칸씩` : '증축: 더 늘릴 족보 없음';
+  if (!photoOn && cardEls[best]){ const [x,y]=centerOf(cardEls[best]); burst(x,y,chrColor(),18,300,6); floatText(`+1칸 · ${old}→${s.pts}`, x, y-14, {size:18, color:chrColor()}); }
+  return `증축: 족보 한 장 +1칸 (${s.seq.length}칸 ${s.pts}점)`;
 }
 // ---- 묘수꾼: 시간 정지, 매치 없이 8번 움직이면 풀림 ----
 function startRunner(){
@@ -3034,8 +3100,34 @@ function teleport(){
   const c0=clears; resolve(); if (clears>c0) achSet('wanderer_1',1);
   sproutCheck();
 }
+// ---- 정원사: 촉진 뒤 5초 동안, 바로(1수) 또는 2수 안에 ㅗ 매치가 되는 이동을 반짝여 알려 줌 ----
+let gHintUntil=0;
+function simStep(dr,dc){   // 판을 잠깐 움직여 보고 되돌리는 함수를 돌려줌
+  const pr=player.r, pc=player.c, r=pr+dr, c=pc+dc;
+  if (!inb(r,c) || players.some(pl=>pl!==player && pl.r===r && pl.c===c)) return null;
+  const id=grid[idx(r,c)]; grid[idx(pr,pc)]=id; grid[idx(r,c)]=EMPTY; player.r=r; player.c=c;
+  return ()=>{ player.r=pr; player.c=pc; grid[idx(r,c)]=id; grid[idx(pr,pc)]=EMPTY; };
+}
+function gardenHint(){
+  board.querySelectorAll('.ghint').forEach(e=>e.remove());
+  if (!isChr('gardener') || !blocks || dead || elapsed>=gHintUntil) return;
+  const keep=R.cbMixed, out=[];
+  for (const [dr,dc] of DIRS){
+    const undo=simStep(dr,dc); if (!undo) continue;
+    let lv=0;
+    if (findMatch()) lv=1;
+    else for (const [er,ec] of DIRS){ const u2=simStep(er,ec); if (!u2) continue; const ok=!!findMatch(); u2(); if (ok){ lv=2; break; } }
+    undo(); if (lv) out.push([dr,dc,lv]);
+  }
+  R.cbMixed=keep;
+  const best=Math.min(...out.map(o=>o[2]));
+  for (const [dr,dc,lv] of out){ if (lv!==best) continue;
+    const d=onCell('ghint'+(lv===2?' far':''), player.r+dr, player.c+dc, 1); d.style.setProperty('--gc', chrColor()); }
+}
 // 이동 한 번이 끝난 뒤 공통 처리
 function postMove(matched){
+  if (isChr('gardener') && elapsed<gHintUntil) setTimeout(gardenHint,0);
+  else if (isChr('gardener')) board.querySelectorAll('.ghint').forEach(e=>e.remove());
   if (runnerOn && --runnerLeft<=0) endRunner();
   sproutCheck();
   if (isChr('wanderer')){ if (matched) wanderLeft=WANDER.every; else if (--wanderLeft<=0) teleport(); }
@@ -3086,14 +3178,14 @@ const RED = 1, BLUE = 2, YELLOW = 0;
 const ZEUS = {showMs:1000, stepMs:500, order:[2,1,0]};
 const ARSON = {tick:4, spread:3, warn:1, reignite:3, waterMax:6, waterCost:2, overflowTime:0.5};
 const RACER = {interval:0.2, streakBonus:0.5};
-const PACHY = {hold:0.18, first:0.28, accel:0.78, min:0.06, pts:40};   // 박치기 점수 = pts × 돌진 칸 수²
-let zeus = null, ar = null, racer = null, racerAuto = false, dash = null, lastDir = [0,1];
+const PACHY = {hold:0.2, first:0.5, accel:0.68, min:0.045, pts:40, cap:6};   // 박치기 점수 = pts × min(칸 수, cap)²
+let zeus = null, ar = null, racer = null, racerAuto = false, dash = null, lastDir = [0,1], pSwipe = null, pKey = false;
 const zeusOn = () => !!(zeus && zeus.active);
 function resetNew4(){
   zeus = {active:false, left:0, total:0, tgt:2, strikes:0, absorbed:0, t:null};
   ar = {timer:ARSON.tick, warn:[], warned:false, reignite:0, water:0, uses:0, doubles:0, out:0};
   racer = {dir:[0,1], t:RACER.interval, streak:0, turns:0, bonus:0, best:0};
-  dash = null; lastDir = [0,1]; racerAuto = false;
+  dash = null; lastDir = [0,1]; racerAuto = false; pSwipe = null; pKey = false;
   document.body.classList.remove('zeus','arson','seer');
   const zd=$('#zeusDim'); if (zd) zd.classList.remove('on');
   document.querySelectorAll('.zbadge,.ewarn').forEach(e=>e.classList ? e.classList.remove('ewarn') : 0);
@@ -3107,7 +3199,7 @@ function forceAdvance(i, fxOn=true){
   const pts=Math.round(s.pts*bonusX()); score+=pts; stat('recipes',1);
   byLen[s.seq.length]=(byLen[s.seq.length]||0)+1; recipeCost.push(movesSinceRecipe); movesSinceRecipe=0;
   scoreLog.push({t:elapsed, pts, clear:clears});
-  slots[i]=feverOn ? makeFeverCard([]) : makeCard(i);
+  slots[i]=makeCard(i);
   if (fxOn && !photoOn){ breakCard({i, old:s, pts, x3:false}); setTimeout(()=>sfx('recipe'),60); }
   return pts;
 }
@@ -3316,11 +3408,48 @@ function racerTick(dt){
 }
 
 /* ---------- 파키케팔로사우르스: 꾹 누르면 마지막 방향으로 점점 빨라지며 돌진, 돌진 중 매치하면 박치기 점수 ---------- */
-function dashStart(){
-  if (dash || dead) return;
+function dashStart(dir=lastDir){
+  if (dash || dead || halted() || zeusOn()) return;
   begin();
-  dash={dir:lastDir.slice(), n:0, t:PACHY.first, held:true};
+  dash={dir:dir.slice(), n:0, t:PACHY.first, held:true};
   document.body.classList.add('dash');
+  const p=$('#player'); if (p && !reduceMotion) p.animate([{scale:1},{scale:.82},{scale:1}],{duration:200,easing:'ease-out'});
+}
+// 판이 돌진 방향으로 밀렸다가 스프링처럼 돌아옴
+function boardKick(dr,dc,px){
+  if (reduceMotion) return;
+  board.animate([{translate:'0 0'},{translate:`${dc*px}px ${dr*px}px`,offset:.12},{translate:`${-dc*px*.45}px ${-dr*px*.45}px`,offset:.4},
+    {translate:`${dc*px*.18}px ${dr*px*.18}px`,offset:.7},{translate:'0 0'}],{duration:380,easing:'ease-out'});
+}
+function shockAt(x,y,color,k){
+  const d=document.createElement('div'); d.className='shock'; d.style.left=x+'px'; d.style.top=y+'px'; d.style.borderColor=color;
+  document.body.appendChild(d);
+  d.animate([{scale:.2,opacity:1,borderWidth:'10px'},{scale:2.2+k*.35,opacity:0,borderWidth:'1px'}],{duration:420+k*60,easing:'cubic-bezier(.1,.8,.3,1)'}).onfinish=()=>d.remove();
+}
+function slamText(txt,x,y,size,color){
+  const d=document.createElement('div'); d.className='slam'; d.textContent=txt; d.style.left=x+'px'; d.style.top=y+'px'; d.style.fontSize=size+'px'; d.style.color=color;
+  document.body.appendChild(d);
+  d.animate([{scale:3,opacity:0,rotate:'-14deg'},{scale:.9,opacity:1,rotate:'-6deg',offset:.18},{scale:1.08,offset:.3},{scale:1,opacity:1,offset:.7},{scale:1.1,opacity:0,translate:'0 -18px'}],
+    {duration:reduceMotion?500:820,easing:'ease-out'}).onfinish=()=>d.remove();
+}
+function heavySfx(power){
+  if (!settings.sound) return; audioInit(); if (!AC) return;
+  const t=AC.currentTime+.005;
+  tone('sine',120+power*6,32,.42,.95,t); tone('square',70,40,.16,.22,t);
+  noise('lowpass',900+power*120,.28,.7,t); noise('highpass',2600,.07,.35,t+.01);
+}
+function pachyImpact(n,pts){
+  const [x,y]=cellCenter(player.r,player.c), cc=chrColor(), [dr,dc]=dash.dir, k=Math.min(PACHY.cap,n);
+  // 쾅! — 흰 섬광 → 캐릭터색, 판 밀림, 충격파, 파편
+  flashScreen('#FFFFFF',[x,y]); setTimeout(()=>flashScreen(cc,[x,y]),90);
+  boardKick(dr,dc,6+k*3);
+  for (let i=0;i<Math.min(3,1+Math.floor(k/2));i++) setTimeout(()=>shockAt(x,y,i?cc:'#fff',k), i*70);
+  burst(x,y,'#FFFFFF',14+k*4,420+k*60,7); burst(x,y,cc,16+k*6,320+k*70,8); burst(x,y,'#5A4A2A',8+k*2,260+k*40,5);
+  slamText(k>=4?'쾅!!':'쾅!', x, y-10, 38+k*7, '#FFF7E0');
+  if (!reduceMotion) retrigger($('#stage'),'shake-big');
+  heavySfx(k);
+  const gid=gameId;
+  setTimeout(()=>{ if (gid!==gameId) return; floatText(`박치기 ${n}칸 +${pts.toLocaleString()}`, x, y+18, {size:18+k*2, color:cc, to:$('#rScore'), onArrive:()=>{ if (gid!==gameId) return; shownTarget+=pts; bump($('#rScore')); }}); }, 120);
 }
 function dashStop(){ if (!dash) return; dash=null; document.body.classList.remove('dash'); refreshHud(); }
 function dashTick(dt){
@@ -3329,7 +3458,7 @@ function dashTick(dt){
   dash.t-=dt; if (dash.t>0) return;
   const [dr,dc]=dash.dir, r=player.r+dr, c=player.c+dc;
   if (!inb(r,c) && !wrapOn() && !portalOn()){   // 벽에 쿵
-    if (!photoOn){ nudge(dr,dc); recoil(4+dash.n); sfx('dry'); }
+    if (!photoOn){ nudge(dr,dc); boardKick(dr,dc,3+Math.min(6,dash.n)); if (dash.n>=2){ const [x,y]=cellCenter(player.r,player.c); slamText('쿵', x+dc*cellPx*.5, y+dr*cellPx*.5, 24+Math.min(6,dash.n)*2, '#D9CFB0'); heavySfx(1); } else sfx('dry'); }
     dashStop(); return;
   }
   dash.n++;
@@ -3337,15 +3466,9 @@ function dashTick(dt){
   doStep(dr,dc);
   if (!dash) return;
   if (clears>c0){            // 박치기!
-    const pts=Math.round(PACHY.pts*n*n*passiveX());
+    const k=Math.min(PACHY.cap,n), pts=Math.round(PACHY.pts*k*k*passiveX());
     score+=pts; scoreLog.push({t:elapsed, pts, clear:clears}); R.pcN=(R.pcN||0)+1; R.pcBest=Math.max(R.pcBest||0,n);
-    if (!photoOn){
-      const [x,y]=cellCenter(player.r,player.c), gid=gameId;
-      floatText(`박치기 ${n}칸! +${pts}`, x, y-26, {size:18+Math.min(6,n)*3, color:chrColor(), to:$('#rScore'), onArrive:()=>{ if (gid!==gameId) return; shownTarget+=pts; bump($('#rScore')); }});
-      burst(x,y,chrColor(),10+n*6,260+n*50,6); flashScreen(chrColor()); recoil(4+n*2);
-      if (n>=3 && !reduceMotion) retrigger($('#stage'),'shake-big');
-      chrSound();
-    } else shownTarget+=pts;
+    if (!photoOn) pachyImpact(n,pts); else shownTarget+=pts;
     dashStop(); return;
   }
   dash.t=Math.max(PACHY.min, PACHY.first*Math.pow(PACHY.accel, dash.n));
@@ -3396,8 +3519,8 @@ function endVamp(quiet){
 }
 
 // ---- 거울: 꾹 눌러 위아래가 뒤집힌 세계로 ----
-const holdChr = () => isChr('mirror') || isChr('restock') || isChr('arson') || isChr('pachy') || (isChr('painter') && paintCharges>0);
-const holdNeed = () => isChr('pachy') ? 250 : HOLD_MS;   // 파키케팔로사우르스는 더 빨리 반응
+const holdChr = () => isChr('mirror') || isChr('restock') || isChr('arson');
+const holdNeed = () => HOLD_MS;
 function holdStart(){ if (!holdChr() || dead || halted() || switching || hold) return; hold={t:performance.now(), el:null}; }
 function holdCancel(){ if (!hold) return; if (hold.el) hold.el.remove(); hold=null; }
 function holdTick(now){
@@ -3409,7 +3532,7 @@ function holdTick(now){
   if (e>=holdNeed()){ holdCancel(); swallowTap=true; begin(); holdAct(); }
 }
 function holdAct(){
-  if (isChr('restock')) restock(); else if (isChr('painter')) usePaint(); else if (isChr('arson')) arsonAction(); else if (isChr('pachy')) dashStart(); else switchWorld();
+  if (isChr('restock')) restock(); else if (isChr('arson')) arsonAction(); else switchWorld();
 }
 function switchWorld(){
   if (switching || !blocks || dead) return;
@@ -3463,12 +3586,15 @@ function checkWp(){
   if (player.r!==r || player.c!==c) return;
   const [x,y]=cellCenter(r,c);
   if (!mr.matched){ floatText('매치 먼저', x, y, {size:14, color:'#8FAAB2'}); return; }
-  timeLeft+=MR_BONUS; clearTime+=MR_BONUS;
+  const chain = R.mrLast!=null && elapsed-R.mrLast<=MR_CHAIN_GAP ? Math.min(MR_BONUS+2, (R.mrBon||MR_BONUS)+1) : MR_BONUS;
+  R.mrBon=chain; R.mrLast=elapsed;
+  timeLeft+=chain; clearTime+=chain;
   R.mrN++; achSet('marathon_1',R.mrN); achSet('marathon_2',R.mrN); achSet('marathon_3',R.mrN);
   mr.target=(mr.target+1)%4; mr.matched=false;
   sfx('flag'); passiveFx(true);
   ringAt(r,c); burst(x,y,'#FFD23F',18,340,5);
-  const tEl=$('#rTime'), [tx,ty]=centerOf(tEl); floatText(`+${MR_BONUS}`, tx+tEl.offsetWidth*.6, ty, {size:24, color:'#FFD23F'}); bump(tEl);
+  const tEl=$('#rTime'), [tx,ty]=centerOf(tEl); floatText(`+${chain}`, tx+tEl.offsetWidth*.6, ty, {size:20+chain*2, color:'#FFD23F'}); bump(tEl);
+  if (chain>MR_BONUS) floatText(`연속 ${chain-MR_BONUS+1}번째!`, x, y-24, {size:18, color:'#FFD23F'});
   const old=wpEls[0]; if (old && !reduceMotion){ const g=old.cloneNode(); board.appendChild(g); g.animate([{scale:1,opacity:1},{scale:1.8,opacity:0}],{duration:500,easing:'ease-out'}).onfinish=()=>g.remove(); }
   placeWp();
 }
@@ -3541,16 +3667,18 @@ addEventListener('keydown',e=>{
   if (typing(e)) return;
   const m={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1],w:[-1,0],s:[1,0],a:[0,-1],d:[0,1],
     q:[-1,-1],e:[-1,1],z:[1,-1],c:[1,1]};
-  if (e.key===' ' && (isChr('mirror')||isChr('restock')||isChr('painter')||isChr('arson')||isChr('pachy')) && curScreen==='game'){ e.preventDefault(); if (e.repeat && isChr('pachy')) return; if (!dead && !halted() && holdChr()){ begin(); holdAct(); } return; }
+  if (e.key===' ' && (isChr('mirror')||isChr('restock')||isChr('arson')) && curScreen==='game'){ e.preventDefault(); if (!dead && !halted() && holdChr()){ begin(); holdAct(); } return; }
   const v=m[e.key]; if(!v) return; e.preventDefault();
+  if (isChr('pachy') && curScreen==='game'){ if (e.repeat){ if (!pKey){ pKey=true; dashStart(v); } return; } pKey=false; }   // 파키: 방향키를 누르고 있으면 그 방향으로 돌진
   doStep(v[0],v[1], isChr('ambi') && e.key.startsWith('Arrow') ? 1 : 0); // 양손잡이: WASD 왼손, 방향키 오른손
 });
 let tx=0,ty=0,tmoved=false,lastTouch=0,padHold=null,padRepeat=null,padBtn=null;
-function padStop(){ clearTimeout(padHold); clearInterval(padRepeat); padHold=padRepeat=null;
+function padStop(){ clearTimeout(padHold); clearInterval(padRepeat); padHold=padRepeat=null; if (dash && isChr('pachy')) dash.held=false;
   if (padBtn){ padBtn.classList.remove('hit'); padBtn=null; } }
 function padStart(b){
   padStop(); padBtn=b; b.classList.add('hit');
   const dr=+b.dataset.r, dc=+b.dataset.c; doStep(dr,dc);
+  if (isChr('pachy')){ padHold=setTimeout(()=>dashStart([dr,dc]), PACHY.hold*1000); return; }   // 파키: 버튼을 누르고 있으면 돌진
   padHold=setTimeout(()=>{ padRepeat=setInterval(()=>doStep(dr,dc),cfg.arr); },cfg.das);
 }
 function bindPad(){
@@ -3590,11 +3718,13 @@ function bindBoard(){
       const d=[[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]][(k+8)%8];
       doStep(d[0],d[1],th); return;
     }
-    if (Math.abs(dx)>Math.abs(dy)) doStep(0,dx>0?1:-1,th); else doStep(dy>0?1:-1,0,th);
+    const sd = Math.abs(dx)>Math.abs(dy) ? [0,dx>0?1:-1] : [dy>0?1:-1,0];
+    doStep(sd[0],sd[1],th);
+    if (isChr('pachy')) pSwipe={t:performance.now(), dir:sd};   // 파키: 스와이프한 손가락을 떼지 않으면 그 방향으로 돌진
   },{passive:false});
-  area.addEventListener('touchcancel',()=>{ holdCancel(); if (dash) dash.held=false; },{passive:true});
+  area.addEventListener('touchcancel',()=>{ holdCancel(); pSwipe=null; if (dash) dash.held=false; },{passive:true});
   area.addEventListener('touchend',e=>{
-    holdCancel(); if (dash) dash.held=false;
+    holdCancel(); pSwipe=null; if (dash) dash.held=false;
     lastTouch=Date.now(); if (tmoved || swallowTap) return;
     const t=e.changedTouches[0], rect=board.getBoundingClientRect();
     const c=Math.floor((t.clientX-rect.left)/cellPx), r=Math.floor((t.clientY-rect.top)/cellPx);
@@ -3615,22 +3745,57 @@ function tick(now){
   const raw=Math.min(0.1,(now-tPrev)/1000); tPrev=now;
   if (started && !dead && !halted()){
     elapsed+=raw;
-    if (!photoOn && !madanOn() && !zeusOn()) gclock+=raw; // 사진·마탄 장전 중엔 리필·코인 시계도 멈춤
+    if (!photoOn && !madanOn() && !zeusOn()) gclock+=raw*refillRate(); // 사진·마탄 장전 중엔 리필·코인 시계도 멈춤. 피버·피의 시간엔 리필이 빨라짐
     serviceRefill(); serviceCoins();
     if (vamp && elapsed>=vamp.until) endVamp();
     if (feverOn && elapsed>=feverUntil) endFever();
     if (kingUntil && elapsed>=kingUntil){ kingUntil=0; $('#pad').classList.remove('king'); }
     if (photoOn && elapsed>=photoUntil) endPhoto();
+    if (madanOn() && !mt.firing && elapsed>=mt.until){ mt.firing=true; mt.shots=MADAN.shots; renderBullets(); madanDevil(); }   // 18초 안에 다 못 쏘면 7번째 탄이 바로
     tickNew(); tickNew2(); tickNew3(); tickNew4(raw);
     if (elapsed>=frozenUntil && !photoOn && !tut && !madanOn() && !conductOn() && !runnerOn && !zeusOn()) timeLeft-=raw*(isChr('cursed')?CURSE.t:1);
     if (timeLeft<=0){ timeLeft=0; timeUp(); }
   }
   holdTick(now);
+  if (pSwipe && !dash && now-pSwipe.t>=PACHY.hold*1000){ const d=pSwipe.dir; pSwipe=null; if (isChr('pachy')) dashStart(d); }
+  bgEffect(raw);
   shownScore += (shownTarget-shownScore)*Math.min(1,raw*12);
   if (Math.abs(shownTarget-shownScore)<0.5) shownScore=shownTarget;
   stepFx(raw);
   if (blocks) refreshHud();
   requestAnimationFrame(tick);
+}
+// 발동 중인 효과를 배경색으로. 남은 시간이 가장 짧은 효과를 보여 주고, 끝나기 3초 전부터 점점 빠르게 깜빡임(2→8Hz)
+let bgPh=0, bgCol='', bgLv=0;
+function bgEffect(dt){
+  const el=document.getElementById('bgfx'); if (!el) return;
+  if (!(dt>0)) dt=0; if (!(bgLv>=0)) bgLv=0;
+  let best=null;
+  const add=(until,color,win=3)=>{ const r=until-elapsed; if (r>0 && (!best || r<best.r)) best={r,color,win}; };
+  if (curScreen==='game' && started && !dead && chr && blocks){
+    const cc=chr.color;
+    if (elapsed<frozenUntil) add(frozenUntil,cc);
+    if (feverOn) add(feverUntil,cc);
+    if (vampOn()) add(vamp.until,'#E0304A');
+    if (photoOn) add(photoUntil,'#F4F4F4');
+    if (cbOn()) add(cbUntil,cc);
+    if (retroOn()) add(retroUntil,'#D9D9D9');
+    if (chamOn()) add(chamUntil,cc);
+    if (kingOn()) add(kingUntil,cc);
+    if (runnerOn) add(runnerUntil,cc);
+    if (madanOn() && mt.until) add(mt.until,cc);
+    if (!best && zeusOn()) best={r:99,color:'#FFE14A',win:0};
+    if (!best && mirror) best={r:99,color:'#BFE0FF',win:0};
+    if (!best && isChr('bounty') && bountyCol>=0) best={r:bountyNext-elapsed,color:COL[bountyCol],win:2};
+  }
+  const col=best?best.color:'';
+  if (col && col!==bgCol){ bgCol=col; el.style.background=`radial-gradient(ellipse 130% 95% at 50% 45%, ${col}59 0%, ${col}47 45%, ${col}2e 80%, ${col}1a 100%)`; }
+  let target=best?1:0;
+  if (best && best.r<best.win){
+    if (!halted()) bgPh+=dt*(2+6*(1-best.r/best.win))*Math.PI*2;
+    target=.25+.75*(.5+.5*Math.cos(bgPh)); bgLv=target;
+  } else { bgPh=0; bgLv+=(target-bgLv)*Math.min(1,dt*10); }
+  el.style.opacity=bgLv.toFixed(3);
 }
 function refreshHud(){
   if (photoOn){ photoHud(); return; } // 사진 중엔 화면 전체가 멈춘 것처럼
@@ -3652,24 +3817,24 @@ function refreshHud(){
     if (wild>0) st.push(wild>1?`와일드 ${wild}`:'와일드');
     if (kingOn()) st.push(`${fmt(kingUntil-elapsed)}초`);
     if (bombs>0) st.push(`폭발 ${bombs}`);
-    if (madanOn()) st.push(`${MADAN.shots-mt.shots}발 · ${DEVIL[mt.devil]}`);
+    if (madanOn()) st.push(`${MADAN.shots-mt.shots}발 · ${fmt(Math.max(0,mt.until-elapsed))}초 · ${DEVIL[mt.devil]}`);
     if (vampOn()) st.push(`${fmt(vamp.until-elapsed)}초`);
         if (chamOn()) st.push(`${fmt(chamUntil-elapsed)}초`);
     if (mineCharges>0) st.push(`채굴 ${mineCharges}`);
-    if (isChr('painter') && paintCharges>0) st.push(`물감 ${paintCharges} · 꾹`);
     if (zeusOn()) st.push(`⚡ ${zeus.left}`);
     for (const u of [conductOn()&&conductUntil, cbOn()&&cbUntil, retroOn()&&retroUntil, portalOn()&&portalUntil]) if (u) st.push(`${fmt(u-elapsed)}초`);
-    if (ndl && ndl.armed) st.push('바늘');
+    if (ndl) st.push(`바늘 ${ndl.left||1}`);
     const s=chrEl.querySelector('.status:not(.pv)');
     let html=st.join('  ');
     if (chr.id==='runner' && runnerOn) html=`<b>${runnerLeft}</b><small>수</small><small>${fmt(Math.max(0,runnerUntil-elapsed))}초</small>`;
     if (chr.id==='wanderer') html=`<b>${wanderLeft}</b><small>수 뒤 이동</small>`;
     else if (chr.id==='racer') html=`<b>${racer.streak}</b><small>칸 질주${racer.streak?` · +${fmt(racer.streak*RACER.streakBonus)}초`:''}</small>`;
-    else if (chr.id==='pachy') html=dash ? `<b>${dash.n}</b><small>칸 돌진</small>` : `<small>꾹 눌러 돌진</small>`;
+    else if (chr.id==='pachy') html=dash ? `<b>${dash.n}</b><small>칸 돌진 · +${(PACHY.pts*Math.min(PACHY.cap,dash.n+1)**2).toLocaleString()}</small>` : `<small>밀고 그대로 누르면 돌진</small>`;
     else if (chr.id==='arson') html=`<span class="drops">${Array.from({length:ARSON.waterMax},(_,i)=>`<i class="${i<ar.water?'on':''}"></i>`).join('')}</span><small>불 ${fireCount()}${ar.reignite>0?` · 재점화 ${fmt(ar.reignite)}초`:''}</small>`;
+    else if (chr.id==='colorblind' && cbOn()) html=`<span class="eq"><i style="background:${COL[cbPair[0]]}"></i>=<i style="background:${COL[cbPair[1]]}"></i></span><small>${fmt(cbUntil-elapsed)}초</small>`;
     else if (!chr.seq.length && !html) html=passiveText();
     if (s._h!==html){ s._h=html; s.innerHTML=html; }
-    board.style.boxShadow = st.length||mirror ? `0 0 0 2px ${chr.color}, 0 0 28px ${chr.color}55` : '';
+    board.style.boxShadow = '';   // 10/14: 발동 표시는 판 테두리 대신 배경색(bgEffect)
   } else board.style.boxShadow='';
   showHints();
 }
@@ -3678,6 +3843,7 @@ function resultData(){
     clearTime:+clearTime.toFixed(1), abilityUses, multBonus, feverPts, elapsed:+elapsed.toFixed(1), costLog, recipeCost};
 }
 function gameOver(){
+  if (feverOn) endFever(true);   // 피버 스택 정산을 최고 점수 계산보다 먼저
   dead=true; padStop(); clearHints(); sfx('end');
   const earned=runTrial ? 0 : Math.floor(score/100)+runCoins;
   meta.coins+=earned;
@@ -3696,7 +3862,6 @@ function gameOver(){
   if (isChr('artisan')){ achSet('artisan_1',recipeCost.length); achSet('artisan_2',score); achSet('artisan_3',score); }
   if (isChr('wanderer')) achSet('wanderer_3',score);
   saveMeta(); syncMeta();
-  if (feverOn){ feverOn=false; slots=stash; stash=null; }
 
   $('#ovNew').textContent=runTrial?`${chrOf(runTrial).name} 체험 끝`:isNew?'최고 기록':'';
   $('#ovScore').textContent=score.toLocaleString();
@@ -3927,37 +4092,37 @@ function synth(r){ const n=NEXT_R[r]; if (!n || passOf(r)<GACHA.synth) return fa
 // 상세 설명: 효과 / 잘 맞는 때 / 팁
 const DETAIL = {
   none:     {fx:'능력이 없어요. 기본 규칙만으로 플레이해요.', when:'규칙을 익히거나 순수한 실력을 재 보고 싶을 때', tip:'어떤 캐릭터든 결국 ㅗ 모양 매치와 족보 순서 맞추기가 기본이에요.'},
-  gardener: {fx:'판에서 자라고 있는 씨앗(빈칸)이 전부 즉시 다 자란 블럭이 돼요.', when:'매치를 연달아 해서 빈칸이 많이 쌓였을 때', tip:'빈칸이 6개 이상일 때 발동하면 이득이 커요. 리필이 느린 판 초반에 특히 강해요.'},
+  gardener: {fx:'판에서 자라고 있는 씨앗(빈칸)이 전부 즉시 다 자란 블럭이 돼요. 그 뒤 5초 동안 바로 매치되는 이동 칸이 반짝여요(1수 안에 없으면 2수 안에 되는 칸을 점선으로).', when:'매치를 연달아 해서 빈칸이 많이 쌓였을 때', tip:'빈칸이 6개 이상일 때 발동하면 이득이 커요. 리필이 느린 판 초반에 특히 강해요.'},
   wall:     {fx:'항상 켜져 있어요. 벽에 붙은 칸에서는 벽 쪽 한 방향을 빼고 3방향만 같은 색이어도 매치돼요(얻는 시간은 절반). 연속으로 벽 매치를 해도 돼요.', when:'판 가장자리를 돌면서 플레이할 때', tip:'모서리 칸에서는 매치되지 않아요. 벽 바로 옆 줄을 주 무대로 쓰세요.'},
-  marathon: {fx:'항상 켜져 있어요. 깃발이 왼쪽 위 → 왼쪽 아래 → 오른쪽 아래 → 오른쪽 위 순서로 옮겨 가요. 직전 깃발 이후 매치를 한 번 이상 하고 깃발 칸에 들어가면 시간 +2초.', when:'판 전체를 크게 돌면서 플레이할 때', tip:'깃발이 금색으로 빛나면 준비 완료예요. 가는 길에 매치를 끼워 넣으세요.'},
-  sewer:    {fx:'바늘을 장전해요. 그 뒤로 지나간 칸이 어떤 블럭의 주위 8칸을 모두 덮으면, 그 블럭이 뽑히며 매치 1회로 쳐요(시간 획득 + 그 색으로 족보 진행). 장전 중엔 캐릭터 족보가 멈춰요.', when:'필요한 색 블럭이 판에 하나뿐일 때', tip:'여러 번에 나눠서 둘러도 돼요. 6칸 이상 감싼 블럭은 초록으로 표시돼요.'},
-  gambler:  {fx:'다음에 완성하는 족보 점수가 ×2. 한 번에 여러 족보를 완성하면 전부 ×2이고, 연속으로 발동하면 기회가 쌓여요.', when:'4칸 족보(1,000점)가 거의 찼을 때', tip:'×2가 켜진 동안 짧은 족보를 먼저 깨지 않도록 순서를 조절하세요.'},
+  marathon: {fx:'항상 켜져 있어요. 깃발이 왼쪽 위 → 왼쪽 아래 → 오른쪽 아래 → 오른쪽 위 순서로 옮겨 가요. 직전 깃발 이후 매치를 한 번 이상 하고 깃발 칸에 들어가면 시간 +2초. 15초 안에 다음 깃발을 연달아 통과하면 +3초 → +4초로 커져요.', when:'판 전체를 크게 돌면서 플레이할 때', tip:'깃발이 금색으로 빛나면 준비 완료예요. 가는 길에 매치를 끼워 넣으세요.'},
+  sewer:    {fx:'바늘 2번을 장전해요. 지나간 칸이 어떤 블럭의 주위 8칸을 모두 덮으면 그 블럭이 뽑히며 매치 1회로 쳐요(시간 획득 + 그 색으로 족보 진행). 한 번 뽑으면 그 자리에서 바늘이 다시 장전돼 한 블럭을 더 감쌀 수 있어요. 장전 중엔 캐릭터 족보가 멈춰요.', when:'필요한 색 블럭이 판에 하나뿐일 때', tip:'여러 번에 나눠서 둘러도 돼요. 6칸 이상 감싼 블럭은 초록으로 표시돼요.'},
+  gambler:  {fx:'다음에 완성하는 족보 점수가 ×2. 한 번에 여러 족보를 완성하면 전부 ×2이고, 연속으로 발동하면 기회가 쌓여요(최대 2번).', when:'4칸 족보(1,000점)가 거의 찼을 때', tip:'×2가 켜진 동안 짧은 족보를 먼저 깨지 않도록 순서를 조절하세요.'},
   clock:    {fx:'4초 동안 남은 시간이 줄지 않아요. 리필은 그대로 진행돼요.', when:'족보 완성까지 멀리 돌아가야 할 때', tip:'정지 중엔 시간 걱정 없이 4칸 족보를 노려 보세요. 연속 발동하면 시간이 이어 붙어요.'},
-  bomber:   {fx:'다음 매치 3번이 대각선 4칸까지 함께 터뜨리고, 그때 얻는 시간이 2배가 돼요.', when:'시간이 부족할 때', tip:'대각선 4칸이 모두 다 자란 블럭이면 꽉 찬 폭발이 돼요.'},
+  bomber:   {fx:'다음 매치 5번이 대각선 4칸까지 함께 터뜨리고, 그때 얻는 시간이 2배가 돼요.', when:'시간이 부족할 때', tip:'대각선 4칸이 모두 다 자란 블럭이면 꽉 찬 폭발이 돼요.'},
   king:     {fx:'10초 동안 대각선으로도 움직일 수 있어요(8방향).', when:'원하는 블럭이 대각선 바로 옆에 있을 때', tip:'스와이프를 대각선으로 그으면 돼요. 패드에서는 모서리 버튼이 켜져요.'},
-  alchemist:{fx:'가장 많이 진행된 족보의 다음 색으로, 내 바로 옆이 아닌 블럭 5개의 색을 바꿔요.', when:'다음 색 블럭이 판에 부족할 때', tip:'바뀐 블럭에는 잠시 테두리가 남아요. 그 블럭들로 ㅗ 모양을 만들기 쉬워요.'},
-  fever:    {fx:'10초 동안 족보 3칸이 색마다 1칸짜리 족보로 바뀌고 모두 280점이에요. 끝나면 원래 족보로 돌아가요(진행은 유지).', when:'매치를 빠르게 이어 갈 수 있을 때', tip:'피버 중엔 어떤 색을 깨도 거의 점수예요. 속도가 곧 점수예요.'},
+  alchemist:{fx:'가장 많이 진행된 족보의 다음 색으로, 내 바로 옆을 뺀 가까운 블럭 5개의 색을 바꿔요.', when:'다음 색 블럭이 판에 부족할 때', tip:'바뀐 블럭에는 잠시 테두리가 남아요. 그 블럭들로 ㅗ 모양을 만들기 쉬워요.'},
+  fever:    {fx:'10초 피버! 피버 중엔 색과 상관없이 매치할 때마다 스택이 1개씩 쌓이고(판 가운데 큰 숫자), 리필이 2배 빨라요. 족보는 평소처럼 진행돼요. 피버가 끝나면 스택 n개에 대해 50 × n(n+1)/2 점을 한 번에 받아요(5스택 750 · 10스택 2,750 · 15스택 6,000).', when:'매치를 빠르게 이어 갈 수 있을 때', tip:'피버 중엔 어떤 색을 깨도 거의 점수예요. 속도가 곧 점수예요.'},
   joker:    {fx:'다음 매치 2번이 색과 상관없이 모든 족보를 한 칸씩 진행해요. 여러 번 쌓을 수 있어요.', when:'세 족보가 모두 마지막 한 칸 남았을 때', tip:'와일드를 쌓아 뒀다가 한 번에 여러 족보를 완성하세요.'},
-  photo:    {fx:'7초 동안 화면이 사진처럼 멈추고 시간·리필도 멈춰요. 이동은 계속 처리되고, 끝나면 쌓인 매치가 한꺼번에 터져요. 사진 속 매치마다 족보 점수 배율 +0.5(최대 ×4).', when:'판을 외워 둘 자신이 있을 때', tip:'사진 속에서 매치를 많이 쌓을수록 뒤에 완성한 족보 배율이 커져요.'},
-  mirror:   {fx:'항상 켜져 있어요. 판을 0.5초 꾹 누르면(키보드는 스페이스) 위아래가 뒤집힌 거울세계로 바뀌어요. 거울세계에서는 족보를 뒤에서부터 채워요. 앞뒤 진행은 공유돼요.', when:'족보 앞쪽 색은 없고 뒤쪽 색이 많을 때', tip:'세계를 오가며 양쪽에서 채우면 족보가 가운데서 완성돼요.'},
-  vampire:  {fx:'6초 동안 모든 블럭이 빨강이에요. 주위 4칸이 모두 블럭이면 색과 상관없이 매치(매치당 +1초). 족보는 2칸 → 3칸 → 4칸 순서로 하나씩 채워져요.', when:'빨강 블럭이 많은 판에서 발동을 노릴 때', tip:'6초 동안 최대한 빠르게 매치하세요. 5번이면 2칸·3칸 족보가 함께 끝나요.'},
-  madan:    {fx:'재생 중인 칸이 모두 즉시 채워지고, 시간이 멈춘 채 6발이 장전돼요. 이동할 때마다 들어가는 칸의 블럭을 쏴서 없애고 그 색으로 족보를 진행해요. 탄으로 완성한 족보는 점수 ×1.25. 7번째 탄은 장전 때 예고된 저주가 터져요(시간 −8초 / 점수 −1,000 / 이번에 쏜 칸 30초간 재생 안 됨).', when:'족보에 필요한 색이 판 여기저기 흩어져 있을 때', tip:'6발로 족보 여러 개를 한꺼번에 노리세요. 저주 종류는 탄창 옆에 미리 보여요.'},
+  photo:    {fx:'7초 동안 화면이 사진처럼 멈추고 시간·리필도 멈춰요. 이동은 계속 처리되고, 끝나면 쌓인 매치가 한꺼번에 터져요. 사진 속 매치 수에 따라 보너스: 1번 250 · 2번 500 · 3번 1,000 · 4번 2,000 …(매치마다 2배, 6번까지).', when:'판을 외워 둘 자신이 있을 때', tip:'사진 속에서 매치를 많이 쌓을수록 뒤에 완성한 족보 배율이 커져요.'},
+  mirror:   {fx:'항상 켜져 있어요. 판을 0.5초 꾹 누르면(키보드는 스페이스) 위아래가 뒤집힌 거울세계로 바뀌어요. 거울세계에서는 족보를 뒤에서부터 채우고, 족보 칸도 거꾸로 보여요. 앞뒤 진행은 공유되고, 앞과 뒤에서 채워 가운데서 만나 완성하면 점수 ×1.5.', when:'족보 앞쪽 색은 없고 뒤쪽 색이 많을 때', tip:'세계를 오가며 양쪽에서 채우면 족보가 가운데서 완성돼요.'},
+  vampire:  {fx:'6초 동안 모든 블럭이 빨강이고 리필이 2.5배 빨라요. 주위 4칸이 모두 블럭이면 색과 상관없이 매치(매치당 +1초). 족보는 2칸 → 3칸 → 4칸 순서로 하나씩 채워져요.', when:'빨강 블럭이 많은 판에서 발동을 노릴 때', tip:'6초 동안 최대한 빠르게 매치하세요. 5번이면 2칸·3칸 족보가 함께 끝나요.'},
+  madan:    {fx:'재생 중인 칸이 모두 즉시 채워지고, 시간이 멈춘 채 6발이 장전돼요. 이동할 때마다 들어가는 칸의 블럭을 쏴서 없애고 그 색으로 족보를 진행해요. 탄으로 완성한 족보는 점수 ×1.25. 장전은 18초까지, 6발을 다 쏘거나 18초가 지나면 7번째 탄의 저주가 터져요(시간 −8초 / 점수 −1,000 / 이번에 쏜 칸 30초간 재생 안 됨).', when:'족보에 필요한 색이 판 여기저기 흩어져 있을 때', tip:'6발로 족보 여러 개를 한꺼번에 노리세요. 저주 종류는 탄창 옆에 미리 보여요.'},
   mechanic: {fx:'진행이 가장 덜 된 족보를 한 칸 진행해요. 그 한 칸으로 족보가 끝나면 바로 점수가 들어와요.'},
-  pickpocket:{fx:'항상 켜져 있어요. 족보를 완성하는 순간 내 주변 두 칸(5×5) 안에 있는 금화를 전부 끌어와요. 연속 금화 보너스도 그대로 쌓여요.'},
-  painter:  {fx:'고정 족보를 완성하면 물감이 1개 생겨요(최대 2개). 원할 때 판을 0.5초 꾹 누르면(키보드는 스페이스) 물감 1개로, 지나온 길의 블럭 최대 3개를 가장 많이 진행된 족보의 다음 색으로 칠해요. 지나온 칸이 비어 있으면 내 주변 블럭을 칠해요. 동선을 미리 짜 두고 원하는 순간에 쓰면 ㅗ 모양을 만들 수 있어요.'},
+  pickpocket:{fx:'항상 켜져 있어요. 족보를 완성하는 순간 내 주변 두 칸(5×5) 안에 있는 금화를 전부 끌어오고, 금화 1개마다 +100점. 연속 금화 보너스도 그대로 쌓여요.'},
+  painter:  {fx:'고정 족보를 완성하면 바로 발동해요. 지나온 길의 블럭 최대 5개를 가장 많이 진행된 족보의 다음 색으로 칠해요. 지나온 칸이 씨앗이면 내 주변 블럭을 칠해요.'},
   poseidon: {fx:'다 자란 블럭 중 파란 블럭이 전부 아래쪽으로 가라앉아 평평하게 깔려요. 나머지 색은 위로 올라가고, 색 개수는 그대로예요.'},
   restock:  {fx:'항상 켜져 있어요. 판을 0.5초 꾹 누르면(키보드는 스페이스) 블럭이 1.2초 동안 돌다가 모든 색이 무작위로 바뀌어요. 도는 동안엔 움직일 수 없고 시간은 흘러요. 다시 쓰려면 6초 기다려야 해요.'},
-  colorblind:{fx:'10초 동안 무작위 두 색을 같은 색으로 쳐요. 두 번째 색 블럭이 첫 번째 색으로 보이고 문양은 그대로 남아요. 매치와 족보 진행 모두 같은 색으로 쳐요.'},
-  retro:    {fx:'10초 동안 판과 족보가 흑백으로 바뀌어요. 블럭 문양(동그라미·네모·마름모·세모)으로만 구분해야 하는 대신 족보 점수 ×3, 흑백 중 족보를 완성할 때마다 2초씩 늘어나요.'},
+  colorblind:{fx:'10초 동안 무작위 두 색을 같은 색으로 쳐요(캐릭터 칸에 A=B로 표시). 두 번째 색 블럭이 첫 번째 색으로 보이고 문양은 그대로 남아요. 매치와 족보 진행 모두 같은 색으로 쳐요.'},
+  retro:    {fx:'10초 동안 판과 족보가 흑백으로 바뀌어요. 블럭 문양으로만 구분해야 하는 대신 족보 점수 ×2, 흑백 중 족보를 완성할 때마다 2초씩 늘어나요(한 번에 최대 +4초).'},
   navigator:{fx:'항상 켜져 있어요. 벽 밖으로 나가면 반대편 끝에서 다시 나타나요. 매치 판정도 판을 넘어 이어져서, 가장자리에 서 있으면 반대편 끝 칸을 이웃으로 삼아 매치할 수 있어요.'},
-  twins:    {fx:'항상 켜져 있어요. 족보의 다음 두 칸이 같은 색이면, 그 색 매치 한 번으로 두 칸이 함께 진행돼요(한 번에 최대 2칸). 같은 색이 이어진 족보의 높은 점수는 그대로 받아요.'},
-  bounty:   {fx:'항상 켜져 있어요. 10초마다 현상금 색이 바뀌고(직전 색과 다른 색), 현상금 색으로 매치하면 평소 시간에 2초가 더 붙어요. 현상금 색 블럭은 흰 테두리가 깜빡여요.'},
+  twins:    {fx:'항상 켜져 있어요. 족보에서 같은 색이 이어지면, 그 색 매치 한 번으로 이어진 칸이 모두 함께 진행돼요. 같은 색이 이어진 족보의 높은 점수는 그대로 받아요.'},
+  bounty:   {fx:'항상 켜져 있어요. 10초마다 현상금 색이 바뀌고(직전 색과 다른 색), 현상금 색으로 매치하면 평소 시간에 2초가 더 붙어요. 현상금 색은 배경색과 캐릭터 칸 색 칩으로 보이고, 바뀌기 2초 전부터 배경이 깜빡여요.'},
   sprout:   {fx:'항상 켜져 있어요. 판에 색 없는 새싹 블럭이 하나 있어요. 둘레 8칸과 상하좌우 두 칸 떨어진 4칸(모두 12칸) 안에서는 씨앗이 바로 다 자라요. 새싹 블럭은 다른 블럭처럼 밀어서 옮기고, 빈 칸 바로 옆에 있으면 매치가 막혀요.'},
   explorer: {fx:'항상 켜져 있어요. 판에 3×3 탐험 구역이 점선으로 표시돼요. 내가 구역 안에서 매치하면 가장 많이 진행된 족보가 한 칸 더 나아가요. 쓴 구역은 사라지고 5초 뒤 다른 곳에 생겨요.'},
   echo:     {fx:'지난 10초 동안 족보로 얻은 점수만큼 한 번 더 얻어요. 능력을 발동시킨 매치로 함께 완성된 족보와, 이전 메아리 점수는 빼고 계산해요.'},
-  architect:{fx:'지금 족보 3장의 끝에 무작위 색을 한 칸씩 덧붙여요. 칸이 늘어난 만큼 점수도 다시 계산돼서 크게 올라요. 한 족보에는 한 번만 붙어요.'},
+  architect:{fx:'캐릭터 족보(2칸)를 완성하면 가장 많이 진행된 족보 하나의 끝에 무작위 색을 한 칸 덧붙여요(최대 5칸). 칸이 늘어난 만큼 점수도 다시 계산돼서 크게 올라요.'},
   artisan:  {fx:'항상 켜져 있어요. 족보가 3칸과 4칸 두 장만 나와요. 대신 완성할 때마다 점수 ×1.5예요.'},
-  runner:   {fx:'시간이 멈추고, 그동안 깨진 자리의 씨앗은 바로 다 자라요. 8번 움직이거나 6초가 지나면 풀려요(매치해도 남은 이동은 그대로). 멈춘 동안의 매치는 시간을 주지 않아요.'},
+  runner:   {fx:'시간이 멈추고, 그동안 깨진 자리의 씨앗은 바로 다 자라요. 8번 움직이거나 6초가 지나면 풀려요. 매치하면 6초가 다시 채워져요(남은 이동은 그대로). 멈춘 동안의 매치는 시간을 주지 않아요.'},
   conductor:{fx:'20초 동안 가만히 있으면 시간이 멈추고, 한 번 움직일 때마다 0.5초씩 줄어요. 그동안 족보 점수 ×1.5. 생각은 공짜, 움직임은 비싸요.'},
   chameleon:{fx:'족보들에 가장 많이 남아 있는 색을 골라, 10초 동안 그 색 칸은 어떤 색으로 매치해도 진행돼요. 그동안 새로 나오는 족보에도 적용돼요. 바뀐 칸은 무지개색으로 보이고 원래 모양 기호만 남아요.'},
   miner:    {fx:'다음 2번의 이동은 블럭과 자리를 바꾸지 않고 그 블럭을 캐내요. 캐낸 색으로 족보가 진행되지만 시간은 주지 않아요. 내가 떠난 칸에는 새 씨앗이 심어져요. 씨앗 칸으로 움직이면 캐지 않고 평소처럼 밀어요.'},
@@ -3965,9 +4130,9 @@ const DETAIL = {
   arson:    {fx:'항상 켜져 있어요. 판에 빨강 불씨 1개로 시작하고 빨강은 다시 나오지 않아요. 4초마다 불길 가장자리 3칸이 번져요(1초 전 점선 예고, 파랑은 안 탐). 족보의 다음 칸이 빨강일 때 빨강을 매치하면 2칸 전진(족보에 ×2 표시). 빨강을 깬 자리엔 잔불이 남아 다시 불로 자라요. 파랑 매치마다 물방울 +1(최대 6, 넘치면 +0.5초). 판을 꾹 누르면(키보드는 스페이스) 물방울 2개로 불 절반을 꺼요. 불이 모두 꺼지면 3초 뒤 먼 곳에 다시 붙어요.'},
   seer:     {fx:'씨앗이 어떤 색으로 자랄지 미리 보여요. 고정 족보를 완성하면 판에서 같은 색 4칸이 ㅗ·ㅜ·ㅓ·ㅏ 모양을 이룬 곳을 모두 찾아 매치해요(씨앗은 자랄 색으로 쳐요, 한 블럭은 한 모양에만). 모양마다 매치 시간을 얻고, 모양 수만큼 일반 족보 3개가 모두 전진해요.'},
   racer:    {fx:'항상 켜져 있어요. 0.2초마다 바라보는 방향으로 저절로 한 칸씩 움직여요. 스와이프·방향키는 움직이지 않고 방향만 바꿔요. 벽에 막히면 멈춰 있어요. 매치하면, 방향을 바꾼 뒤 같은 방향으로 달린 칸 수 × 0.5초를 더 얻어요(매치 후 0부터 다시).'},
-  pachy:    {fx:'항상 켜져 있어요. 판을 꾹 누르면(0.25초, 키보드는 스페이스를 누르고 있기) 마지막으로 움직인 방향으로 돌진해요. 처음엔 0.28초에 한 칸, 칸마다 빨라져 최대 0.06초에 한 칸. 손을 떼거나 벽에 부딪히면 멈춰요. 돌진 중에 매치가 나면 박치기! 돌진한 칸 수 n에 따라 40 × n² 점(1칸 40 · 3칸 360 · 5칸 1,000)을 더 얻고 돌진이 끝나요. 이동은 평소처럼 블럭과 자리를 바꿔요.'},
-  wanderer: {fx:'항상 켜져 있어요. 족보 점수가 모두 ×2예요. 대신 10번 움직이는 동안 블럭을 못 깨면 판의 무작위 칸으로 순간이동해요(블럭을 깨면 다시 10번부터)(그 칸의 블럭과 자리를 바꿔요). 도착한 자리가 매치 조건이면 바로 매치돼요.'},
-  ambi:     {fx:'항상 켜져 있어요. 내가 둘이에요(왼쪽·오른쪽 벽 한 칸 안쪽에서 시작). 화면 왼쪽 절반 스와이프는 왼손, 오른쪽 절반은 오른손. 키보드는 WASD와 방향키.', when:'양손 조작에 익숙할 때', tip:'두 손이 서로 다른 색을 노리게 하면 매치 기회가 두 배예요.'}
+  pachy:    {fx:'항상 켜져 있어요. 스와이프한 손가락을 떼지 않고 0.2초 누르고 있으면 그 방향으로 돌진해요(패드는 버튼 누르고 있기, 키보드는 방향키 누르고 있기). 처음엔 0.5초에 한 칸, 칸마다 빨라져 최대 0.045초에 한 칸. 손을 떼거나 벽에 쿵 부딪히면 멈춰요. 돌진 중에 매치가 나면 쾅! 박치기 점수 40 × n²(n=돌진 칸 수, 6칸까지: 1칸 40 · 3칸 360 · 6칸 1,440)을 더 얻고 돌진이 끝나요.'},
+  wanderer: {fx:'항상 켜져 있어요. 족보 점수가 모두 ×1.5예요. 대신 10번 움직이는 동안 블럭을 못 깨면 판의 무작위 칸으로 순간이동해요(블럭을 깨면 다시 10번부터, 그 칸의 블럭과 자리를 바꿔요). 도착한 자리가 매치 조건이면 바로 매치돼요.'},
+  ambi:     {fx:'항상 켜져 있어요. 내가 둘이에요(왼쪽·오른쪽 벽 한 칸 안쪽에서 시작). 화면 가운데 점선 왼쪽 스와이프는 왼손(하늘색), 오른쪽은 오른손(주황). 키보드는 WASD와 방향키.', when:'양손 조작에 익숙할 때', tip:'두 손이 서로 다른 색을 노리게 하면 매치 기회가 두 배예요.'}
 };
 
 const RANK = {N:0, R:1, SR:2, SSR:3, UR:4};
@@ -4239,7 +4404,7 @@ $('#pMenu').addEventListener('click',leaveGame);
 $('#again').addEventListener('click',()=>{ sfx('ui'); startGame(); });
 $('#toMenu').addEventListener('click',()=>{ sfx('ui'); go('menu'); });
 addEventListener('keydown',e=>{ if (typing(e)) return; if (e.key==='Escape' && curScreen==='game') setPause(!paused); });
-addEventListener('keyup',e=>{ if (e.key===' ' && dash) dash.held=false; });
+addEventListener('keyup',e=>{ if (/^Arrow|^[wasd]$/.test(e.key)){ pKey=false; if (dash) dash.held=false; } });
 board=$('#board');
 function fitViewport(){
   const h = window.visualViewport ? visualViewport.height : innerHeight;
@@ -4270,7 +4435,7 @@ requestAnimationFrame(tick);
    - 판마다 시드를 정해 게임 난수를 고정하고, 입력을 시간과 함께 기록 → 같은 판 재생·버그 재현용
    - 기록은 config.js의 LOG_URL(구글 Apps Script)로 전송. 실패하거나 주소가 없으면 이 기기에 쌓아 두고 나중에 다시 보냄 */
 (() => {
-const BUILD = 'test-1014a';
+const BUILD = 'test-1014b';
 const LOG_URL = (new URLSearchParams(location.search).get('log') || window.LOG_URL || '').trim();
 const HAS_URL = /^https:\/\/script\.google(usercontent)?\.com\//.test(LOG_URL);
 const SKEY = 'swapmatch.test.v1', QKEY = 'swapmatch.test.queue';
@@ -4316,7 +4481,7 @@ setInterval(flush, 30000);
 const _complete = complete;
 complete = function (id) { if (id === 'tut') return _complete(id); }; // 튜토리얼 완료 표시만 남기고 업적은 끔
 meta.lv = Math.max(meta.lv, MAIN); meta.bupSeen = MAIN; meta.dia = 0;
-meta.unlocked = GACHA_IDS.slice();
+meta.unlocked = GACHA_IDS.concat('ambi');   // 양손잡이: 뽑기엔 없는 숨은 캐릭터, 체험판에선 맨 아래에
 saveMeta();
 const ROSTER = ['none', ...GACHA_IDS];
 
@@ -4366,7 +4531,7 @@ function endRun(reason) {
     abilityUses, abilityTimes: run.ab.join(','), coins: runCoins,
     mpcMedian: q(.5), mpcP90: q(.9), mpc8plus: c.filter(x => x >= 8).length,
     scoreTimes: scoreLog.map(e => Math.round(e.t) + ':' + e.pts).join(','),
-    seed: run.seed, inputs: run.inputs.join(',')
+    board: cfg.n, seed: run.seed, inputs: run.inputs.join(',')
   }, device()));
 }
 const _gameOver = gameOver;
@@ -4465,7 +4630,7 @@ rebind('#pRestart', () => { setPause(false); play(curChar); });
 rebind('#pMenu', () => { endRun('quit'); if (blocks && !dead) { dead = true; padStop(); clearHints(); } setPause(false); showPick(); });
 
 // 목록 순서: 희귀도 순 (기본 → 희귀 → 영웅 → 전설 → 신화), 같은 등급 안에서는 로스터 순
-const ORDER = ['none', ...chrSorted()];
+const ORDER = ['none', ...chrSorted(), 'ambi'];
 const order = () => ORDER;
 function showPick() { go('pick'); renderPick(); flush(); }
 function renderPick() {
@@ -4483,7 +4648,7 @@ function renderPick() {
     const right = x.n ? `<span class="${x.n >= PLAYS ? 'dn' : ''}">${x.n}판</span><small>최고 ${x.best.toLocaleString()}</small>` : `<span class="nw">NEW</span>`;
     return `<button class="trw${x.n >= PLAYS ? ' done' : ''}" data-id="${id}" style="--rc:var(--r${r})">
       <span class="em" style="background:${C.color}">${C.name[0]}</span>
-      <span class="tn"><b>${C.name}<small>${id === 'none' ? '기준' : RARITY[r].name}</small></b><i>${C.ab}</i></span>
+      <span class="tn"><b>${C.name}<small>${id === 'none' ? '기준' : id === 'ambi' ? '숨은 캐릭터' : RARITY[r].name}</small></b><i>${C.ab}</i></span>
       <span class="tc">${right}</span></button>`;
   }).join('');
   qInfo();
@@ -4495,7 +4660,7 @@ function qInfo() {
     el.innerHTML = `기록 서버가 아직 설정되지 않았어요. 기록 ${Q.length}개가 이 기기에 저장돼 있어요.<br><button id="tCopy">기록 복사</button>`;
   } else {
     el.className = 'tq';
-    el.textContent = `${BUILD} · ${S.tester}` + (Q.length ? ` · 보내는 중 ${Q.length}` : '');
+    el.textContent = `${BUILD} · ${S.tester}` + (BOARD_N !== 7 ? ` · ${BOARD_N}×${BOARD_N} 판(랭킹 제외)` : '') + (Q.length ? ` · 보내는 중 ${Q.length}` : '');
   }
 }
 document.addEventListener('click', e => {
@@ -4512,7 +4677,7 @@ function openDet(id) {
   const el = $('#tDetC'); el.style.setProperty('--rc', `var(--r${r})`);
   el.innerHTML = `<div class="hd"><span class="em" style="background:${C.color}">${C.name[0]}</span><h3>${C.name}</h3>
       <button class="x" data-a="x" aria-label="닫기">×</button>
-      <div class="tags">${id === 'none' ? '<span class="src">비교 기준</span>' : `<span class="rtag" style="--rc:var(--r${r})">${RARITY[r].name}</span>`}</div></div>
+      <div class="tags">${id === 'none' ? '<span class="src">비교 기준</span>' : `<span class="rtag" style="--rc:var(--r${r})">${id === 'ambi' ? '숨은 캐릭터' : RARITY[r].name}</span>`}</div></div>
     ${C.seq.length ? `<div class="dots"><b>고정 족보</b>${C.seq.map(c => `<span class="dot" data-c="${c % 4}"><i class="g"></i></span>`).join('')}</div>` : ''}
     <div class="dsec"><b>효과</b><p>${D.fx || C.ab}</p></div>
     ${x.n ? `<div class="cond">${x.n}판 · 최고 ${x.best.toLocaleString()}</div>` : ''}
