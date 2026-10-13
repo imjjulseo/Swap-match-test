@@ -816,6 +816,43 @@
   .gc .gpb{position:absolute;left:12%;right:12%;bottom:7%;height:4px;border-radius:2px;background:rgba(0,0,0,.35);overflow:hidden}
   .gc .gpb i{display:block;height:100%;background:#C9B6FF}
   .fxk{cursor:default}
+  /* ===================== 10/13 신규 ===================== */
+  [data-ch=zeus]::after{content:''!important;width:38%;height:58%;background:linear-gradient(#FFF7C2,#FFD22E 60%,#E0A400)!important;clip-path:polygon(58% 0,18% 56%,46% 56%,34% 100%,82% 40%,54% 40%,70% 0)}
+  [data-ch=arson]::after{content:''!important;width:40%;height:54%;background:linear-gradient(#FFF2B0,#FF9A2A 55%,#E0322F)!important;clip-path:polygon(50% 0,72% 28%,86% 58%,74% 88%,50% 100%,26% 88%,14% 58%,30% 34%,42% 46%)}
+  [data-ch=seer]::after{content:''!important;width:52%;height:34%;border-radius:50%;background:radial-gradient(circle,#2A1F4A 0 28%,#C9B8FF 30% 46%,#7D63FF 48% 70%,transparent 72%)!important}
+  [data-ch=racer]::after{content:''!important;width:44%;height:44%;background:linear-gradient(90deg,#FFE08A,#FF7A2A)!important;clip-path:polygon(0 18%,52% 18%,52% 0,100% 50%,52% 100%,52% 82%,0 82%);transform:translate(-50%,-50%) rotate(var(--rot,0deg))!important;transition:transform .08s}
+  [data-ch=pachy]::after{content:''!important;width:50%;height:36%;border-radius:50% 50% 30% 30%/70% 70% 30% 30%;background:radial-gradient(circle at 50% 35%,#F2E3BF 0 30%,#B8A06A 32% 70%,#7A6534 72%)!important;box-shadow:0 0 0 1.5px rgba(0,0,0,.25)}
+  body.dash #player{box-shadow:0 0 0 2px var(--chr),0 0 18px var(--chr)}
+  body.dash #board{animation:dashShake .09s linear infinite}
+  @keyframes dashShake{50%{translate:1px -1px}}
+  /* 방화광: 불(빨강) 블럭은 일렁임, 번질 칸은 점선 예고, 잔불 씨앗 */
+  body.arson .blk[data-c="1"] .core{background:radial-gradient(circle at 50% 78%,#FFD36A 0%,#FF6A2A 40%,var(--c1) 72%)!important;box-shadow:0 0 10px 2px rgba(255,110,40,.55);animation:flicker 1.1s ease-in-out infinite}
+  @keyframes flicker{0%,100%{filter:brightness(1)}40%{filter:brightness(1.2)}70%{filter:brightness(.9)}}
+  .blk.ewarn .core{outline:2px dashed #FFB04A;outline-offset:-3px;animation:emberWarn .35s ease-in-out infinite alternate}
+  @keyframes emberWarn{to{outline-color:#FF4A2A;filter:brightness(1.3)}}
+  .blk.seedling.ember .core{background:radial-gradient(circle,#FFD36A,#FF6A2A 70%)!important;box-shadow:0 0 8px 2px rgba(255,120,40,.6)}
+  body.arson .rc:not(.chr) .dot[data-c="1"]:not(.got){position:relative}
+  body.arson .rc:not(.chr) .dot[data-c="1"]:not(.got)::before{content:'×2';position:absolute;right:-6px;top:-7px;font-size:8.5px;font-weight:800;line-height:1;color:#fff;background:#FF6A2A;border-radius:4px;padding:2px 3px;z-index:1}
+  .rc.chr .drops{display:inline-flex;gap:3px;align-items:center;margin-right:6px}
+  .rc.chr .drops i{width:9px;height:12px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;transform:rotate(180deg);box-shadow:inset 0 0 0 1.5px #3D8BFF;opacity:.5}
+  .rc.chr .drops i.on{background:linear-gradient(#BFE0FF,#3D8BFF);opacity:1}
+  /* 예지안: 씨앗이 자랄 색을 옅게 */
+  body.seer .blk.seedling[data-n]::before{content:'';position:absolute;inset:0;border-radius:5px;opacity:.32;background:var(--sc,transparent)}
+  body.seer .blk.seedling[data-n="0"]{--sc:var(--c0)} body.seer .blk.seedling[data-n="1"]{--sc:var(--c1)} body.seer .blk.seedling[data-n="2"]{--sc:var(--c2)}
+  body.seer .blk.seedling[data-n="3"]{--sc:var(--c3)} body.seer .blk.seedling[data-n="4"]{--sc:var(--c4)}
+  body.seer .blk.seedling[data-n] .core{opacity:.9}
+  body.seer .blk.seedling[data-n="0"] .core{background:var(--c0)} body.seer .blk.seedling[data-n="1"] .core{background:var(--c1)}
+  body.seer .blk.seedling[data-n="2"] .core{background:var(--c2)} body.seer .blk.seedling[data-n="3"] .core{background:var(--c3)}
+  body.seer .blk.seedling[data-n="4"] .core{background:var(--c4)}
+  /* 제우스 */
+  #zeusDim{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(ellipse at 50% 30%,rgba(14,12,30,.45),rgba(4,3,10,.72))}
+  #zeusDim.on{opacity:1}
+  body.zeus #hud,body.zeus #recipes,body.zeus #bar{position:relative;z-index:23}
+  .rc.ztarget{border-color:#FFD22E!important;box-shadow:0 0 0 1px #FFD22E,0 0 16px 3px rgba(255,210,46,.6)}
+  .zbolt{position:fixed;top:0;width:18px;z-index:47;pointer-events:none;transform:translateX(-50%);transform-origin:top center;
+    background:linear-gradient(#fff,#FFF6B0 55%,#FFD22E);clip-path:polygon(50% 0,78% 22%,58% 24%,86% 50%,60% 52%,76% 78%,52% 76%,58% 100%,30% 70%,48% 68%,22% 46%,44% 44%,24% 20%,46% 18%);
+    filter:drop-shadow(0 0 6px #FFF3A0) drop-shadow(0 0 14px #FFD22E)}
+  .zbadge{position:absolute;z-index:8;transform:translate(-50%,-110%);pointer-events:none;font-size:22px;font-weight:800;color:#FFF7C2;text-shadow:0 0 10px #FFD22E,0 0 2px #000;white-space:nowrap}
 
   /* ===================== 체험판 ===================== */
   .tsub{color:var(--ink-dim);font-size:15px;font-weight:700;margin-top:-14px}
@@ -926,6 +963,7 @@
 <canvas id="fxc"></canvas>
 <div id="spot"></div>
 <div id="blood"></div>
+<div id="zeusDim"></div>
 <div id="flash"></div>
 <div id="banner"><div class="t"></div><div class="s"></div></div>
 
@@ -1180,7 +1218,13 @@ const CHARS = {
   conductor:{name:'지휘자',  color:'#F2E6C9', seq:[0,3,2,1],   title:'지휘!',  ab:'20초 동안 움직일 때만 한 번에 0.5초씩 시간이 줄고, 족보 점수 ×1.5'},
   chameleon:{name:'카멜레온',color:'#5FE0A0', seq:[0,2,1],     title:'변신!',  ab:'10초 동안 족보에 가장 많이 남은 색 칸이 아무 색으로나 진행됨'},
   miner:    {name:'광부',    color:'#C9925E', seq:[1,3],       title:'채굴!',  ab:'다음 2번의 이동은 블럭을 밀지 않고 캐내서 그 색으로 족보 진행 (시간 보너스 없음)'},
-  wanderer: {name:'떠돌이',  color:'#E08BFF', seq:[],          title:'',      ab:'족보 점수 ×2. 10번 안에 못 깨면 판의 무작위 칸으로 순간이동(깨면 다시 10번)', passive:true}
+  wanderer: {name:'떠돌이',  color:'#E08BFF', seq:[],          title:'',      ab:'족보 점수 ×2. 10번 안에 못 깨면 판의 무작위 칸으로 순간이동(깨면 다시 10번)', passive:true},
+  // 10/13 팀원 신규 4종 + 파키케팔로사우르스 (팀원 색 번호를 우리 번호로 바꿈: 빨0→1 파1→2 노2→0 초3→3)
+  zeus:     {name:'제우스',  color:'#FFE14A', seq:[0,0,0,0],   title:'낙뢰!',  ab:'시간이 멈추고 노랑 블럭을 모두 흡수. 흡수한 수만큼 족보를 색 무관하게 4칸 → 3칸 → 2칸 순서로 한 칸씩 채움'},
+  arson:    {name:'방화광',  color:'#FF7A3D', seq:[],          title:'',      ab:'빨강 = 불(재생 안 됨, 4초마다 3칸 번짐). 족보 빨강 칸을 빨강으로 채우면 2칸 전진. 파랑 매치로 물방울, 꾹 누르면 물방울 2개로 불 절반 소화', passive:true},
+  seer:     {name:'예지안',  color:'#9A82FF', seq:[3,2,0,1],   title:'예언!',  ab:'씨앗이 자랄 색이 보임. 발동하면 판의 같은 색 ㅗ·ㅜ·ㅓ·ㅏ 모양을 모두 매치하고, 모양 수만큼 족보 3개가 모두 전진'},
+  racer:    {name:'레이서',  color:'#FF9F45', seq:[],          title:'',      ab:'0.2초마다 바라보는 방향으로 자동 이동, 조작은 방향만 바꿈. 매치하면 같은 방향으로 달린 칸 수 × 0.5초 추가', passive:true},
+  pachy:    {name:'파키케팔로사우르스', color:'#B8A06A', seq:[], title:'',  ab:'판을 꾹 누르면 마지막으로 움직인 방향으로 점점 빨라지며 돌진. 돌진 중 매치하면 돌진한 칸 수에 따라 박치기 점수(40 × 칸 수²)', passive:true}
 };
 // 등급: 상점 캐릭터는 일반·희귀, 뽑기 캐릭터는 희귀·영웅·전설
 const RARITY = {N:{name:'기본'}, R:{name:'희귀'}, SR:{name:'영웅'}, SSR:{name:'전설'}, UR:{name:'신화'}, T:{name:'체험권'}};
@@ -1190,7 +1234,8 @@ const RAR = {gardener:'R', wall:'R', marathon:'R', pickpocket:'R', bounty:'R',
   sewer:'R', gambler:'R', clock:'R', bomber:'R', king:'R', alchemist:'R', fever:'R',
   joker:'SR', vampire:'SR', mirror:'SR', painter:'SR', poseidon:'SR', restock:'SR', navigator:'SR', explorer:'SR', artisan:'SR',
   photo:'SSR', colorblind:'SSR', retro:'SSR', architect:'SSR', conductor:'SSR', wanderer:'SSR',
-  madan:'UR', ambi:'UR', runner:'UR'};
+  madan:'UR', ambi:'UR', runner:'UR',
+  zeus:'SR', racer:'SR', pachy:'SR', seer:'SSR', arson:'SSR'}; // 10/13 신규 5종 등급 임시
 const RAR_ORDER = ['R','SR','SSR','UR'];
 const rarOf = id => RAR[id]||'N';
 const rcOf = id => `var(--r${rarOf(id)})`;
@@ -1548,7 +1593,7 @@ function spawn(r,c,color){
 // 씨앗 색은 심을 때 정해지지만(next), 다 자라기 전까진 보이지도 매치되지도 않음
 function spawnSeedling(r,c,next){
   const b=spawn(r,c,null);
-  b.next=next; b.el.classList.add('seedling');
+  b.next=next; b.el.classList.add('seedling'); b.el.dataset.n=next;
   b.el.firstElementChild.style.transform='scale(0.1)';
   return b;
 }
@@ -1618,6 +1663,7 @@ function refillColors(cleared,k){
     for (const c of out) counts[c]++;
     while (out.length<k){ const c=pickDeficit(counts,cleared); counts[c]++; out.push(c); }
   }
+  if (isChr('arson')) return out.map(c=>c===1 ? [0,2,3][rnd(3)] : c);
   return out;
 }
 
@@ -1661,6 +1707,7 @@ function onClear(col, opt={}){
   const need = s => canon(needOf(s))===col || (cham && !s.fever && needOf(s)===chamCol);
   if (usedWild){ slots.forEach((s,i)=>{ advS(s); adv.add(i); }); wild--; }
   else if (cfg.advance==='all'){ slots.forEach((s,i)=>{ if (need(s)){ if (canon(needOf(s))!==col){ R.chN++; R.chA++; achSet('chameleon_1',1); achSet('chameleon_2',R.chA); achSet('chameleon_3',R.chN); } advS(s); adv.add(i);
+    if (isChr('arson') && col===RED && !isDone(s)){ advS(s); ar.doubles++; }
     if (isChr('twins') && !isDone(s) && s.seq[s.p]===s.seq[s.p-1]){ advS(s); R.twN++; achSet('twins_1',1); achSet('twins_2',R.twN); achSet('twins_3',R.twN);
       if (!photoOn && cardEls[i]){ const [x,y]=centerOf(cardEls[i]); floatText('×2', x, y-10, {size:22, color:chrColor()}); } } } }); }
   else {
@@ -1819,6 +1866,8 @@ function useAbility(){
     case 'architect': return extendCards();
     case 'runner': return startRunner();
     case 'chameleon': return startChameleon();
+    case 'zeus': return zeusStrike();
+    case 'seer': return seerStrike();
     case 'miner': mineCharges+=MINE_N; $('#player').classList.add('mine'); return `채굴: 다음 ${mineCharges}번 이동은 블럭을 캐냄`;
   }
   return '';
@@ -2163,7 +2212,7 @@ function passiveFx(big){
 function buildChr(){
   if (!chr) return null;
   const el=document.createElement('div');
-  el.className='rc chr'+(chr.id==='runner'||chr.id==='wanderer'?' cnt':'');
+  el.className='rc chr'+(['runner','wanderer','racer','pachy','arson'].includes(chr.id)?' cnt':'');
   el.innerHTML=`<div class="row1"><span class="emb">${chr.name[0]}</span><div class="dots">${chr.seq.length?dotsHtml(chr.seq,chr.p):`<span class="status pv">${chr.name}</span>`}</div></div><div class="status"></div>`;
   if (!chr.seq.length) el.classList.add('pas');
   el._p=chr.p;
@@ -2311,7 +2360,7 @@ function newGame(){
   mt=null; ndl=null; vamp=null; mirror=false; switching=false; revived=false; hold=null; wpEls=[];
   mr = isChr('marathon') ? {target:0, matched:false} : null;
   document.body.classList.toggle('nav', isChr('navigator'));
-  document.body.classList.remove('madan','vamp','mirror'); $('#spot').classList.remove('on'); resetNew(); resetNew2(); chamCol=-1; chamUntil=0; mineCharges=0; document.body.classList.remove('cham');
+  document.body.classList.remove('madan','vamp','mirror'); $('#spot').classList.remove('on'); resetNew(); resetNew2(); resetNew4(); chamCol=-1; chamUntil=0; mineCharges=0; document.body.classList.remove('cham');
   // 이전 판 연출 정리: 배너·섬광은 화면이 다시 보일 때 애니메이션이 재생되므로 클래스를 떼고, 떠 있는 숫자·파편도 비움
   $('#banner').classList.remove('on'); $('#flash').classList.remove('on');
   document.querySelectorAll('.float').forEach(e=>e.remove()); parts=[]; shards=[];
@@ -2327,7 +2376,8 @@ function newGame(){
   board.insertAdjacentHTML('beforeend','<svg id="trail"></svg>');
   if (mr) for (let i=0;i<2;i++){ const w=document.createElement('div'); w.className='wp'; board.appendChild(w); wpEls.push(w); }
   const isP = (r,c) => players.some(pl=>pl.r===r && pl.c===c);
-  const pool=shuffle(Array.from({length:cfg.n*cfg.n-players.length},(_,i)=>i%cfg.colors));
+  // 방화광은 빨강(불) 없이 시작하고 불씨 하나만 붙임
+  const pool=shuffle(Array.from({length:cfg.n*cfg.n-players.length},(_,i)=>isChr('arson') ? [0,2,3][i%3] : i%cfg.colors));
   let k=0;
   for (let r=0;r<cfg.n;r++) for (let c=0;c<cfg.n;c++){
     if (isP(r,c)) continue;
@@ -2344,6 +2394,9 @@ function newGame(){
   }
   player=players[0];
   setupNew2();
+  if (isChr('arson')){ igniteStart(); document.body.classList.add('arson'); }
+  if (isChr('seer')) document.body.classList.add('seer');
+  if (isChr('racer')) racerArrow();
 
   slots=[];
   const nSlots = isChr('artisan') ? Math.min(2,cfg.slots) : cfg.slots;
@@ -2455,6 +2508,11 @@ function resolve(){
   if (runnerOn){ t=0; R.rnA++; R.rnC++; achSet('runner_1',R.rnC); achSet('runner_2',R.rnA); achSet('runner_3',R.rnC); }
   if (wrapOn() && onEdge()){ R.nvE++; achSet('navigator_2',R.nvE); }
   timeLeft+=t; clearTime+=t;
+  if (isChr('racer') && racer.streak>0){   // 레이서: 같은 방향으로 달린 칸 수 × 0.5초
+    const b=racer.streak*RACER.streakBonus; timeLeft+=b; clearTime+=b; racer.bonus+=b; racer.best=Math.max(racer.best,b);
+    if (!photoOn){ const [x,y]=cellCenter(player.r,player.c); floatText(`질주 +${fmt(b)}s`, x, y-30, {size:16+Math.min(8,racer.streak), color:chrColor()}); }
+    racer.streak=0;
+  }
   if (vampOn()){ R.vM++; achSet('vampire_1',R.vM); }
   if (cbOn()){ R.cbM++; achSet('colorblind_2',R.cbM); if (R.cbMixed) achSet('colorblind_1',1); }
   if (isChr('poseidon') && col===2){ R.poB++; achSet('poseidon_3',R.poB); }
@@ -2484,9 +2542,11 @@ function resolve(){
   if (fx) matchFx(removed, boom, t, coins, chain);
   else veil.push({kind:'match', removed, boom, t, coins, chain});
 
-  const cols=refillColors(col,cells.length);
+  const ember = isChr('arson') && col===RED && !vampOn();   // 방화광: 불을 깬 자리엔 잔불 → 다시 불로 자람
+  const cols = ember ? cells.map(()=>RED) : refillColors(col,cells.length);
   shuffle(cells);
-  const ids=cells.map(([r,c],i)=>spawnSeedling(r,c,cols[i]).id);
+  const ids=cells.map(([r,c],i)=>{ const sd=spawnSeedling(r,c,cols[i]); if (ember){ sd.ember=true; sd.el.classList.add('ember'); } return sd.id; });
+  if (isChr('arson') && col===BLUE) arsonWater();
   const [rdNow,gtNow]=refillSplit();
   if (runnerOn) ids.forEach(id=>mature(blocks.get(id))); // 수읽기 중엔 씨앗이 바로 다 자람
   else pending.push({stage:'grow', ids, at:gclock+rdNow, gt:gtNow});
@@ -3020,6 +3080,285 @@ function mineAt(b,r,c,wrapped){
 }
 function tickNew3(){ if (chamCol>=0 && !chamOn()){ chamCol=-1; document.body.classList.remove('cham'); syncCards(); } }
 
+/* ================= 10/13 신규: 제우스 · 방화광 · 예지안 · 레이서 (팀원 파일 이식) + 파키케팔로사우르스 =================
+   팀원 파일 색 번호(빨0 파1 노2 초3) → 우리 번호(노0 빨1 파2 초3)로 바꿔 옮김. 수치는 원본 그대로 */
+const RED = 1, BLUE = 2, YELLOW = 0;
+const ZEUS = {showMs:1000, stepMs:500, order:[2,1,0]};
+const ARSON = {tick:4, spread:3, warn:1, reignite:3, waterMax:6, waterCost:2, overflowTime:0.5};
+const RACER = {interval:0.2, streakBonus:0.5};
+const PACHY = {hold:0.18, first:0.28, accel:0.78, min:0.06, pts:40};   // 박치기 점수 = pts × 돌진 칸 수²
+let zeus = null, ar = null, racer = null, racerAuto = false, dash = null, lastDir = [0,1];
+const zeusOn = () => !!(zeus && zeus.active);
+function resetNew4(){
+  zeus = {active:false, left:0, total:0, tgt:2, strikes:0, absorbed:0, t:null};
+  ar = {timer:ARSON.tick, warn:[], warned:false, reignite:0, water:0, uses:0, doubles:0, out:0};
+  racer = {dir:[0,1], t:RACER.interval, streak:0, turns:0, bonus:0, best:0};
+  dash = null; lastDir = [0,1]; racerAuto = false;
+  document.body.classList.remove('zeus','arson','seer');
+  const zd=$('#zeusDim'); if (zd) zd.classList.remove('on');
+  document.querySelectorAll('.zbadge,.ewarn').forEach(e=>e.classList ? e.classList.remove('ewarn') : 0);
+  document.querySelectorAll('.zbadge').forEach(e=>e.remove());
+}
+// 일반 족보 i를 색과 상관없이 한 칸 강제로 전진. 완성되면 점수·새 족보. 얻은 점수 반환
+function forceAdvance(i, fxOn=true){
+  const s=slots[i]; if (!s) return 0;
+  advS(s);
+  if (!isDone(s)){ if (fxOn && !photoOn) syncCards(new Set([i])); return 0; }
+  const pts=Math.round(s.pts*bonusX()); score+=pts; stat('recipes',1);
+  byLen[s.seq.length]=(byLen[s.seq.length]||0)+1; recipeCost.push(movesSinceRecipe); movesSinceRecipe=0;
+  scoreLog.push({t:elapsed, pts, clear:clears});
+  slots[i]=feverOn ? makeFeverCard([]) : makeCard(i);
+  if (fxOn && !photoOn){ breakCard({i, old:s, pts, x3:false}); setTimeout(()=>sfx('recipe'),60); }
+  return pts;
+}
+// 블럭 하나를 없애고 그 자리에 씨앗(일반 리필)
+function clearCellToSeed(r,c,col){
+  const id=grid[idx(r,c)]; if (id===EMPTY) return null;
+  const b=blocks.get(id); if (!b) return null;
+  if (b.coinUntil){ coinChain = gclock-coinLast<=COIN_CHAIN_GAP ? coinChain+1 : 1; coinLast=gclock; runCoins+=COIN_VALUE*coinChain; coinShown+=COIN_VALUE*coinChain; }
+  if (b.anim){ b.anim.cancel(); b.anim=null; }
+  for (const p of pending) p.ids=p.ids.filter(x=>x!==id);
+  b.el.classList.add('gone'); const el=b.el; setTimeout(()=>el.remove(),220);
+  blocks.delete(id); grid[idx(r,c)]=EMPTY; stat('blocks',1);
+  const sd=spawnSeedling(r,c, refillColors(col==null?0:col,1)[0]);
+  const [rdNow,gtNow]=refillSplit(); pending.push({stage:'grow', ids:[sd.id], at:gclock+rdNow, gt:gtNow});
+  return sd;
+}
+
+/* ---------- 제우스: 노랑 흡수 → 시간 정지, 4칸 → 3칸 → 2칸 순서로 한 칸씩 낙뢰 ---------- */
+function zeusStrike(){
+  const cells=[];
+  for (const b of blocks.values()) if (b.color===YELLOW && !b.sprout && !players.some(p=>p.r===b.r&&p.c===b.c)) cells.push([b.r,b.c]);
+  Object.assign(zeus,{active:true, left:cells.length, total:cells.length, tgt:ZEUS.order[0]});
+  zeus.strikes++; zeus.absorbed+=cells.length;
+  const [px,py]=cellCenter(player.r,player.c);
+  cells.forEach(([r,c],k)=>{ const [x,y]=cellCenter(r,c); clearCellToSeed(r,c,YELLOW);
+    if (!reduceMotion) setTimeout(()=>floatText('⚡', x, y, {size:18, color:'#FFE14A', to:$('#player'), onArrive:()=>{}}), Math.min(260,k*14)); });
+  burst(px,py,'#FFE14A',40,520,6); burst(px,py,'#FFFBE0',16,360,4);
+  flashScreen('#FFE14A'); if (!reduceMotion) retrigger($('#stage'),'shake-big');
+  $('#zeusDim').classList.add('on'); document.body.classList.add('zeus');
+  zeusBadge(); markZeus();
+  if (!cells.length){ setTimeout(zeusEnd, 600); return '낙뢰: 노랑이 없어요'; }
+  clearTimeout(zeus.t); zeus.t=setTimeout(zeusStep, ZEUS.showMs);
+  return `낙뢰: 노랑 ${cells.length}개 흡수`;
+}
+function zeusBadge(){
+  let b=board.querySelector('.zbadge');
+  if (!zeusOn()){ if (b) b.remove(); return; }
+  if (!b){ b=document.createElement('div'); b.className='zbadge'; board.appendChild(b); }
+  b.textContent=`⚡ ${zeus.left}`;
+  b.style.left=((player.c+.5)*cellPx)+'px'; b.style.top=(player.r*cellPx)+'px';
+  if (!reduceMotion) b.animate([{scale:1.3},{scale:1}],{duration:140});
+}
+function markZeus(){ cardEls.forEach((el,i)=>el && el.classList.toggle('ztarget', zeusOn() && i===zeus.tgt)); }
+function zeusStep(){
+  if (!zeusOn() || dead) return;
+  if (halted()){ zeus.t=setTimeout(zeusStep,120); return; }
+  if (zeus.left<=0) return zeusEnd();
+  const i=zeus.tgt, el=cardEls[i], s=slots[i];
+  if (el && !reduceMotion){
+    const d=el.querySelectorAll('.dot')[nextK(s)], [x,y]=centerOf(d||el);
+    const bolt=document.createElement('div'); bolt.className='zbolt'; bolt.style.left=x+'px'; bolt.style.height=y+'px'; document.body.appendChild(bolt);
+    bolt.animate([{opacity:0,transform:'translateX(-50%) scaleY(.15)'},{opacity:1,transform:'translateX(-50%) scaleY(1)',offset:.3},{opacity:1,offset:.55},{opacity:0}],{duration:260,easing:'ease-out'}).onfinish=()=>bolt.remove();
+    burst(x,y,'#FFE14A',12,300,5);
+    const k=Math.random()<.5?-1:1;
+    $('#app').animate([{transform:'none'},{transform:`translate(${9*k}px,6px)`,offset:.12},{transform:`translate(${-7*k}px,-4px)`,offset:.32},{transform:`translate(${5*k}px,3px)`,offset:.52},{transform:'none'}],{duration:320,easing:'ease-out'});
+  }
+  sfx('clear',4);
+  zeus.left--;
+  const was=slots[i];
+  const pts=forceAdvance(i);
+  if (pts){ const o=ZEUS.order; zeus.tgt=o[(o.indexOf(i)+1)%o.length]; }
+  else if (was!==slots[i]){} // 안전
+  zeusBadge(); markZeus(); refreshHud();
+  zeus.t=setTimeout(zeusStep, ZEUS.stepMs);
+}
+function zeusEnd(){
+  if (!zeus) return;
+  zeus.active=false; clearTimeout(zeus.t);
+  $('#zeusDim').classList.remove('on'); document.body.classList.remove('zeus');
+  zeusBadge(); markZeus(); tPrev=performance.now(); refreshHud();
+}
+
+/* ---------- 예지안: 씨앗이 자랄 색이 보임 + 같은 색 ㅗ·ㅜ·ㅓ·ㅏ 모양을 모두 매치 ---------- */
+const T_ARMS=[[[-1,0],[0,-1],[0,1]],[[1,0],[0,-1],[0,1]],[[-1,0],[1,0],[0,-1]],[[-1,0],[1,0],[0,1]]];
+function seerColorAt(r,c){
+  if (!inb(r,c) || players.some(p=>p.r===r&&p.c===c)) return -1;
+  const id=grid[idx(r,c)]; if (id===EMPTY) return -1;
+  const b=blocks.get(id); if (!b || b.sprout) return -1;
+  return b.color!==null ? b.color : (b.next!=null ? b.next : -1);
+}
+function findTShapes(){
+  const cand=[];
+  for (let r=0;r<cfg.n;r++) for (let c=0;c<cfg.n;c++){
+    const col=seerColorAt(r,c); if (col<0) continue;
+    for (const arms of T_ARMS){
+      const cells=[[r,c]]; let ok=true;
+      for (const [dr,dc] of arms){ if (seerColorAt(r+dr,c+dc)!==col){ ok=false; break; } cells.push([r+dr,c+dc]); }
+      if (ok) cand.push({col,cells});
+    }
+  }
+  const use=new Map(); cand.forEach(t=>t.cells.forEach(([r,c])=>{ const k=r+','+c; use.set(k,(use.get(k)||0)+1); }));
+  cand.forEach(t=>{ t.w=t.cells.reduce((a,[r,c])=>a+use.get(r+','+c),0); });
+  cand.sort((a,b)=>a.w-b.w);
+  const taken=new Set(), out=[];
+  for (const t of cand){ if (t.cells.some(([r,c])=>taken.has(r+','+c))) continue; t.cells.forEach(([r,c])=>taken.add(r+','+c)); out.push(t); }
+  return out;
+}
+function seerStrike(){
+  const shapes=findTShapes(), n=shapes.length;
+  R.seS=(R.seS||0)+1; R.seN=(R.seN||0)+n;
+  const [px,py]=cellCenter(player.r,player.c);
+  burst(px,py,'#C9B8FF',30,420,6); ringAt(player.r,player.c);
+  if (!n) return '예언: 맞는 모양이 없어요';
+  let tSum=0;
+  shapes.forEach((t,k)=>{
+    t.cells.forEach(([r,c])=>{ const [x,y]=cellCenter(r,c); burst(x,y,COL[t.col],7,260,5);
+      if (!reduceMotion) setTimeout(()=>floatText('👁', x, y, {size:16, color:'#C9B8FF'}), k*60);
+      clearCellToSeed(r,c,t.col); });
+    clears++; const g=clearGain(clears); timeLeft+=g; clearTime+=g; tSum+=g;
+  });
+  let gained=0;
+  slots.forEach((_,i)=>{ for (let k=0;k<n;k++) gained+=forceAdvance(i); });
+  if (gained){ shownTarget+=0; }
+  const tEl=$('#rTime'), [tx,ty]=centerOf(tEl); floatText(`+${fmt(tSum)}`, tx+tEl.offsetWidth*0.6, ty, {size:20, color:'#E6F0F2'}); bump(tEl);
+  flashScreen('#C9B8FF'); if (!reduceMotion) retrigger($('#stage'),'shake-big');
+  return `예언 실현: 모양 ${n}개 · 족보 모두 ${n}칸`;
+}
+
+/* ---------- 방화광: 빨강 = 불(재생 안 됨, 4초마다 번짐), 파랑 = 물방울 ---------- */
+const arsonOn = () => isChr('arson');
+const burnable = b => b && b.color!==null && !b.sprout && b.color!==RED && b.color!==BLUE && !players.some(p=>p.r===b.r&&p.c===b.c);
+const fireCount = () => { let n=0; for (const b of blocks.values()) if (b.color===RED) n++; return n; };
+const emberCount = () => { let n=0; for (const b of blocks.values()) if (b.color===null && b.ember) n++; return n; };
+function igniteStart(){
+  const cand=[];
+  for (const b of blocks.values()){
+    if (b.color===null || Math.abs(b.r-player.r)+Math.abs(b.c-player.c)<3) continue;
+    let k=0; for (const [dr,dc] of DIRS){ const r=b.r+dr, c=b.c+dc; if (inb(r,c)){ const o=blocks.get(grid[idx(r,c)]); if (burnable(o)) k++; } }
+    if (k>=2) cand.push(b);
+  }
+  const b=cand.length ? cand[rnd(cand.length)] : [...blocks.values()].find(x=>x.color!==null);
+  if (b){ b.color=RED; b.el.dataset.c=RED; }
+}
+function fireFront(){
+  const out=[], seen=new Set();
+  for (const b of blocks.values()){
+    if (b.color!==RED) continue;
+    for (const [dr,dc] of DIRS){ const r=b.r+dr, c=b.c+dc, k=r+','+c; if (!inb(r,c) || seen.has(k)) continue;
+      const o=blocks.get(grid[idx(r,c)]); if (burnable(o)){ seen.add(k); out.push([r,c]); } }
+  }
+  return out;
+}
+function warnMark(on){ for (const [r,c] of ar.warn){ const b=blocks.get(grid[idx(r,c)]); if (b) b.el.classList.toggle('ewarn', on); } }
+function arsonTick(dt){
+  ar.timer-=dt;
+  if (ar.timer<=ARSON.warn && !ar.warned){
+    ar.warned=true; const f=fireFront();
+    for (let i=0;i<ARSON.spread && f.length;i++) ar.warn.push(f.splice(rnd(f.length),1)[0]);
+  }
+  warnMark(true);
+  if (ar.timer<=0){
+    warnMark(false);
+    for (const [r,c] of ar.warn){ const b=blocks.get(grid[idx(r,c)]); if (!burnable(b)) continue;
+      b.color=RED; b.el.dataset.c=RED; retrigger(b.el,'pop');
+      if (!photoOn){ const [x,y]=cellCenter(r,c); burst(x,y,'#FF8A2A',8,260,5); } }
+    if (ar.warn.length && !photoOn) sfx('clear',2);
+    ar.warn=[]; ar.warned=false; ar.timer+=ARSON.tick;
+  }
+  if (fireCount()===0 && emberCount()===0){
+    if (ar.reignite<=0) ar.reignite=ARSON.reignite;
+    else { ar.reignite-=dt; if (ar.reignite<=0){ ar.reignite=0; reignite(); } }
+  } else ar.reignite=0;
+}
+function reignite(){
+  let best=null, bd=-1;
+  for (const b of blocks.values()){ if (b.color===null || b.sprout || b.color===BLUE) continue;
+    const d=Math.abs(b.r-player.r)+Math.abs(b.c-player.c); if (d>bd){ bd=d; best=b; } }
+  if (!best) return;
+  best.color=RED; best.el.dataset.c=RED; ringAt(best.r,best.c);
+  const [x,y]=cellCenter(best.r,best.c); burst(x,y,'#FFB04A',14,300,5); toast('불씨가 다시 붙었어요');
+}
+function arsonWater(){
+  if (ar.water<ARSON.waterMax){ ar.water++; if (!photoOn){ const [x,y]=cellCenter(player.r,player.c); floatText('💧', x, y-20, {size:20, color:'#8FC4FF'}); } }
+  else { timeLeft+=ARSON.overflowTime; clearTime+=ARSON.overflowTime; if (!photoOn){ const [x,y]=cellCenter(player.r,player.c); floatText(`+${ARSON.overflowTime}s`, x, y-20, {size:16, color:'#8FC4FF'}); } }
+}
+function arsonAction(){
+  if (ar.water<ARSON.waterCost){ const [x,y]=cellCenter(player.r,player.c); floatText(`물방울 ${ar.water}/${ARSON.waterCost}`, x, y, {size:15, color:'#8FAAB2'}); sfx('dry'); return; }
+  const reds=[...blocks.values()].filter(b=>b.color===RED);
+  if (reds.length<=1){ const [x,y]=cellCenter(player.r,player.c); floatText('불이 1칸뿐', x, y, {size:15, color:'#8FAAB2'}); sfx('dry'); return; }
+  ar.water-=ARSON.waterCost; ar.uses++;
+  const k=Math.floor(reds.length/2); shuffle(reds);
+  for (let i=0;i<k;i++){ const b=reds[i], nc=[YELLOW,BLUE,3][rnd(3)]; b.color=nc; b.el.dataset.c=nc; retrigger(b.el,'pop');
+    const [x,y]=cellCenter(b.r,b.c); burst(x,y,'#CFE8FF',6,220,4); }
+  ar.out+=k; flashScreen('#3D8BFF'); sfx('mirror'); passiveFx(true);
+  const [x,y]=cellCenter(player.r,player.c); floatText(`소화 ${k}칸`, x, y-20, {size:20, color:'#8FC4FF'});
+  refreshHud();
+}
+
+/* ---------- 레이서: 0.2초마다 바라보는 방향으로 자동 이동, 입력은 방향만 ---------- */
+function racerSteer(dr,dc){
+  begin();
+  if (racer.dir[0]!==dr || racer.dir[1]!==dc){ racer.turns++; racer.streak=0; }
+  racer.dir=[dr,dc]; racerArrow();
+}
+function racerArrow(){ const p=$('#player'); if (!p) return; const [dr,dc]=racer.dir; p.style.setProperty('--rot', (dc===1?0:dc===-1?180:dr===1?90:-90)+'deg'); }
+function racerTick(dt){
+  racer.t-=dt;
+  if (racer.t>0) return;
+  racer.t+=RACER.interval; if (racer.t<0) racer.t=RACER.interval;
+  const [dr,dc]=racer.dir, r=player.r+dr, c=player.c+dc;
+  if (!inb(r,c) && !wrapOn() && !portalOn()) return;   // 벽에 막히면 제자리
+  // 원본처럼 이번 칸도 질주에 포함한 뒤 매치 판정 (매치를 만든 칸까지 보너스)
+  const r0=player.r, c0=player.c; racer.streak++;
+  racerAuto=true; try { doStep(dr,dc); } finally { racerAuto=false; }
+  if (player.r===r0 && player.c===c0 && racer.streak>0) racer.streak--;
+}
+
+/* ---------- 파키케팔로사우르스: 꾹 누르면 마지막 방향으로 점점 빨라지며 돌진, 돌진 중 매치하면 박치기 점수 ---------- */
+function dashStart(){
+  if (dash || dead) return;
+  begin();
+  dash={dir:lastDir.slice(), n:0, t:PACHY.first, held:true};
+  document.body.classList.add('dash');
+}
+function dashStop(){ if (!dash) return; dash=null; document.body.classList.remove('dash'); refreshHud(); }
+function dashTick(dt){
+  if (!dash) return;
+  if (!dash.held){ dashStop(); return; }
+  dash.t-=dt; if (dash.t>0) return;
+  const [dr,dc]=dash.dir, r=player.r+dr, c=player.c+dc;
+  if (!inb(r,c) && !wrapOn() && !portalOn()){   // 벽에 쿵
+    if (!photoOn){ nudge(dr,dc); recoil(4+dash.n); sfx('dry'); }
+    dashStop(); return;
+  }
+  dash.n++;
+  const c0=clears, n=dash.n;
+  doStep(dr,dc);
+  if (!dash) return;
+  if (clears>c0){            // 박치기!
+    const pts=Math.round(PACHY.pts*n*n*passiveX());
+    score+=pts; scoreLog.push({t:elapsed, pts, clear:clears}); R.pcN=(R.pcN||0)+1; R.pcBest=Math.max(R.pcBest||0,n);
+    if (!photoOn){
+      const [x,y]=cellCenter(player.r,player.c), gid=gameId;
+      floatText(`박치기 ${n}칸! +${pts}`, x, y-26, {size:18+Math.min(6,n)*3, color:chrColor(), to:$('#rScore'), onArrive:()=>{ if (gid!==gameId) return; shownTarget+=pts; bump($('#rScore')); }});
+      burst(x,y,chrColor(),10+n*6,260+n*50,6); flashScreen(chrColor()); recoil(4+n*2);
+      if (n>=3 && !reduceMotion) retrigger($('#stage'),'shake-big');
+      chrSound();
+    } else shownTarget+=pts;
+    dashStop(); return;
+  }
+  dash.t=Math.max(PACHY.min, PACHY.first*Math.pow(PACHY.accel, dash.n));
+}
+
+function tickNew4(dt){
+  if (zeusOn()) return;
+  if (isChr('arson') && !photoOn) arsonTick(dt);
+  if (isChr('racer')) racerTick(dt);
+  if (isChr('pachy')) dashTick(dt);
+}
+
+
 // ---- 뱀파이어: 피의 시간 ----
 function paintRed(s){ s.orig=s.seq.slice(); for (let k=s.p;k<s.seq.length-(s.b||0);k++) s.seq[k]=1; }
 function repaintCard(i, spin=true){
@@ -3057,7 +3396,8 @@ function endVamp(quiet){
 }
 
 // ---- 거울: 꾹 눌러 위아래가 뒤집힌 세계로 ----
-const holdChr = () => isChr('mirror') || isChr('restock') || (isChr('painter') && paintCharges>0);
+const holdChr = () => isChr('mirror') || isChr('restock') || isChr('arson') || isChr('pachy') || (isChr('painter') && paintCharges>0);
+const holdNeed = () => isChr('pachy') ? 250 : HOLD_MS;   // 파키케팔로사우르스는 더 빨리 반응
 function holdStart(){ if (!holdChr() || dead || halted() || switching || hold) return; hold={t:performance.now(), el:null}; }
 function holdCancel(){ if (!hold) return; if (hold.el) hold.el.remove(); hold=null; }
 function holdTick(now){
@@ -3065,11 +3405,11 @@ function holdTick(now){
   if (dead || halted() || switching){ holdCancel(); return; }
   const e=now-hold.t;
   if (e>=HOLD_SHOW && !hold.el) hold.el=onCell('hold',player.r,player.c,1.75);
-  if (hold.el){ hold.el.style.setProperty('--h', Math.min(1,(e-HOLD_SHOW)/(HOLD_MS-HOLD_SHOW))); }
-  if (e>=HOLD_MS){ holdCancel(); swallowTap=true; begin(); holdAct(); }
+  if (hold.el){ hold.el.style.setProperty('--h', Math.min(1,(e-HOLD_SHOW)/(holdNeed()-HOLD_SHOW))); }
+  if (e>=holdNeed()){ holdCancel(); swallowTap=true; begin(); holdAct(); }
 }
 function holdAct(){
-  if (isChr('restock')) restock(); else if (isChr('painter')) usePaint(); else switchWorld();
+  if (isChr('restock')) restock(); else if (isChr('painter')) usePaint(); else if (isChr('arson')) arsonAction(); else if (isChr('pachy')) dashStart(); else switchWorld();
 }
 function switchWorld(){
   if (switching || !blocks || dead) return;
@@ -3156,13 +3496,15 @@ $('#revNo').addEventListener('click',()=>{ $('#rev').classList.remove('on'); gam
 function begin(){ if (!started){ started=true; tPrev=performance.now(); $('#msg').textContent=''; } }
 function doStep(dr,dc,h=0){
   if (dead||busy||halted()||switching) return;
+  if (zeusOn()) return;                                              // 제우스 낙뢰 중엔 조작 불가
+  if (isChr('racer') && !racerAuto){ if (!(dr && dc)) racerSteer(dr,dc); refreshHud(); return; }   // 레이서: 입력은 방향만
   if (dr && dc && !kingOn()) return; // 대각선은 왕 능력 중에만
   hand = players.length>1 ? h : 0; player = players[hand];
   begin(); taps++;
   if (madanOn()){ madanShot(dr,dc); refreshHud(); return; } // 장전 중엔 이동이 곧 사격
   R.lastDiag = !!(dr && dc);
   const c0=clears, s0=score;
-  if (step(dr,dc)){ if (clears===c0) sfx('move'); resolve(); if (ndl && ndl.armed) checkStitch(); if (tut) tutAfter(clears>c0, score>s0); postMove(clears>c0); }
+  if (step(dr,dc)){ lastDir=[dr,dc]; if (clears===c0) sfx('move'); resolve(); if (ndl && ndl.armed) checkStitch(); if (tut) tutAfter(clears>c0, score>s0); postMove(clears>c0); }
   refreshHud(); clearHints();
 }
 async function doPath(r,c){
@@ -3199,7 +3541,7 @@ addEventListener('keydown',e=>{
   if (typing(e)) return;
   const m={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1],w:[-1,0],s:[1,0],a:[0,-1],d:[0,1],
     q:[-1,-1],e:[-1,1],z:[1,-1],c:[1,1]};
-  if (e.key===' ' && (isChr('mirror')||isChr('restock')||isChr('painter')) && curScreen==='game'){ e.preventDefault(); if (!dead && !halted() && holdChr()){ begin(); holdAct(); } return; }
+  if (e.key===' ' && (isChr('mirror')||isChr('restock')||isChr('painter')||isChr('arson')||isChr('pachy')) && curScreen==='game'){ e.preventDefault(); if (e.repeat && isChr('pachy')) return; if (!dead && !halted() && holdChr()){ begin(); holdAct(); } return; }
   const v=m[e.key]; if(!v) return; e.preventDefault();
   doStep(v[0],v[1], isChr('ambi') && e.key.startsWith('Arrow') ? 1 : 0); // 양손잡이: WASD 왼손, 방향키 오른손
 });
@@ -3250,15 +3592,16 @@ function bindBoard(){
     }
     if (Math.abs(dx)>Math.abs(dy)) doStep(0,dx>0?1:-1,th); else doStep(dy>0?1:-1,0,th);
   },{passive:false});
+  area.addEventListener('touchcancel',()=>{ holdCancel(); if (dash) dash.held=false; },{passive:true});
   area.addEventListener('touchend',e=>{
-    holdCancel();
+    holdCancel(); if (dash) dash.held=false;
     lastTouch=Date.now(); if (tmoved || swallowTap) return;
     const t=e.changedTouches[0], rect=board.getBoundingClientRect();
     const c=Math.floor((t.clientX-rect.left)/cellPx), r=Math.floor((t.clientY-rect.top)/cellPx);
     if (inb(r,c)) tapCell(r,c);
   },{passive:true});
   area.addEventListener('mousedown',()=>{ if (Date.now()-lastTouch>700){ swallowTap=false; holdStart(); } });
-  addEventListener('mouseup',()=>holdCancel());
+  addEventListener('mouseup',()=>{ holdCancel(); if (dash) dash.held=false; });
   area.addEventListener('click',e=>{
     if (Date.now()-lastTouch<700 || swallowTap) return;
     const rect=board.getBoundingClientRect();
@@ -3272,14 +3615,14 @@ function tick(now){
   const raw=Math.min(0.1,(now-tPrev)/1000); tPrev=now;
   if (started && !dead && !halted()){
     elapsed+=raw;
-    if (!photoOn && !madanOn()) gclock+=raw; // 사진·마탄 장전 중엔 리필·코인 시계도 멈춤
+    if (!photoOn && !madanOn() && !zeusOn()) gclock+=raw; // 사진·마탄 장전 중엔 리필·코인 시계도 멈춤
     serviceRefill(); serviceCoins();
     if (vamp && elapsed>=vamp.until) endVamp();
     if (feverOn && elapsed>=feverUntil) endFever();
     if (kingUntil && elapsed>=kingUntil){ kingUntil=0; $('#pad').classList.remove('king'); }
     if (photoOn && elapsed>=photoUntil) endPhoto();
-    tickNew(); tickNew2(); tickNew3();
-    if (elapsed>=frozenUntil && !photoOn && !tut && !madanOn() && !conductOn() && !runnerOn) timeLeft-=raw*(isChr('cursed')?CURSE.t:1);
+    tickNew(); tickNew2(); tickNew3(); tickNew4(raw);
+    if (elapsed>=frozenUntil && !photoOn && !tut && !madanOn() && !conductOn() && !runnerOn && !zeusOn()) timeLeft-=raw*(isChr('cursed')?CURSE.t:1);
     if (timeLeft<=0){ timeLeft=0; timeUp(); }
   }
   holdTick(now);
@@ -3294,7 +3637,7 @@ function refreshHud(){
   $('#rScore').textContent=Math.round(shownScore);
   $('#rCoin').textContent=shownCoins();
   $('#rTime').textContent=timeLeft.toFixed(1);
-  const bar=$('#bar'), frozen=started && (elapsed<frozenUntil || madanOn() || conductOn() || runnerOn);
+  const bar=$('#bar'), frozen=started && (elapsed<frozenUntil || madanOn() || conductOn() || runnerOn || zeusOn());
   bar.firstElementChild.style.transform=`scaleX(${Math.max(0,Math.min(1,timeLeft/cfg.fix))})`;
   bar.classList.toggle('warn',timeLeft<5 && !frozen);
   bar.classList.toggle('frozen',frozen);
@@ -3314,12 +3657,16 @@ function refreshHud(){
         if (chamOn()) st.push(`${fmt(chamUntil-elapsed)}초`);
     if (mineCharges>0) st.push(`채굴 ${mineCharges}`);
     if (isChr('painter') && paintCharges>0) st.push(`물감 ${paintCharges} · 꾹`);
+    if (zeusOn()) st.push(`⚡ ${zeus.left}`);
     for (const u of [conductOn()&&conductUntil, cbOn()&&cbUntil, retroOn()&&retroUntil, portalOn()&&portalUntil]) if (u) st.push(`${fmt(u-elapsed)}초`);
     if (ndl && ndl.armed) st.push('바늘');
     const s=chrEl.querySelector('.status:not(.pv)');
     let html=st.join('  ');
     if (chr.id==='runner' && runnerOn) html=`<b>${runnerLeft}</b><small>수</small><small>${fmt(Math.max(0,runnerUntil-elapsed))}초</small>`;
     if (chr.id==='wanderer') html=`<b>${wanderLeft}</b><small>수 뒤 이동</small>`;
+    else if (chr.id==='racer') html=`<b>${racer.streak}</b><small>칸 질주${racer.streak?` · +${fmt(racer.streak*RACER.streakBonus)}초`:''}</small>`;
+    else if (chr.id==='pachy') html=dash ? `<b>${dash.n}</b><small>칸 돌진</small>` : `<small>꾹 눌러 돌진</small>`;
+    else if (chr.id==='arson') html=`<span class="drops">${Array.from({length:ARSON.waterMax},(_,i)=>`<i class="${i<ar.water?'on':''}"></i>`).join('')}</span><small>불 ${fireCount()}${ar.reignite>0?` · 재점화 ${fmt(ar.reignite)}초`:''}</small>`;
     else if (!chr.seq.length && !html) html=passiveText();
     if (s._h!==html){ s._h=html; s.innerHTML=html; }
     board.style.boxShadow = st.length||mirror ? `0 0 0 2px ${chr.color}, 0 0 28px ${chr.color}55` : '';
@@ -3614,6 +3961,11 @@ const DETAIL = {
   conductor:{fx:'20초 동안 가만히 있으면 시간이 멈추고, 한 번 움직일 때마다 0.5초씩 줄어요. 그동안 족보 점수 ×1.5. 생각은 공짜, 움직임은 비싸요.'},
   chameleon:{fx:'족보들에 가장 많이 남아 있는 색을 골라, 10초 동안 그 색 칸은 어떤 색으로 매치해도 진행돼요. 그동안 새로 나오는 족보에도 적용돼요. 바뀐 칸은 무지개색으로 보이고 원래 모양 기호만 남아요.'},
   miner:    {fx:'다음 2번의 이동은 블럭과 자리를 바꾸지 않고 그 블럭을 캐내요. 캐낸 색으로 족보가 진행되지만 시간은 주지 않아요. 내가 떠난 칸에는 새 씨앗이 심어져요. 씨앗 칸으로 움직이면 캐지 않고 평소처럼 밀어요.'},
+  zeus:     {fx:'고정 족보(노랑 4칸)를 완성하면 시간·리필이 멈추고 판의 노랑 블럭을 모두 흡수해요(그 자리는 씨앗). 1초 뒤부터 0.5초마다 낙뢰가 떨어져 족보를 색과 상관없이 한 칸씩 채워요. 4칸 족보부터, 완성되면 3칸 → 2칸 순서로 넘어가요. 흡수한 수만큼 채우면 시간이 다시 흘러요. 그동안은 조작할 수 없어요.'},
+  arson:    {fx:'항상 켜져 있어요. 판에 빨강 불씨 1개로 시작하고 빨강은 다시 나오지 않아요. 4초마다 불길 가장자리 3칸이 번져요(1초 전 점선 예고, 파랑은 안 탐). 족보의 다음 칸이 빨강일 때 빨강을 매치하면 2칸 전진(족보에 ×2 표시). 빨강을 깬 자리엔 잔불이 남아 다시 불로 자라요. 파랑 매치마다 물방울 +1(최대 6, 넘치면 +0.5초). 판을 꾹 누르면(키보드는 스페이스) 물방울 2개로 불 절반을 꺼요. 불이 모두 꺼지면 3초 뒤 먼 곳에 다시 붙어요.'},
+  seer:     {fx:'씨앗이 어떤 색으로 자랄지 미리 보여요. 고정 족보를 완성하면 판에서 같은 색 4칸이 ㅗ·ㅜ·ㅓ·ㅏ 모양을 이룬 곳을 모두 찾아 매치해요(씨앗은 자랄 색으로 쳐요, 한 블럭은 한 모양에만). 모양마다 매치 시간을 얻고, 모양 수만큼 일반 족보 3개가 모두 전진해요.'},
+  racer:    {fx:'항상 켜져 있어요. 0.2초마다 바라보는 방향으로 저절로 한 칸씩 움직여요. 스와이프·방향키는 움직이지 않고 방향만 바꿔요. 벽에 막히면 멈춰 있어요. 매치하면, 방향을 바꾼 뒤 같은 방향으로 달린 칸 수 × 0.5초를 더 얻어요(매치 후 0부터 다시).'},
+  pachy:    {fx:'항상 켜져 있어요. 판을 꾹 누르면(0.25초, 키보드는 스페이스를 누르고 있기) 마지막으로 움직인 방향으로 돌진해요. 처음엔 0.28초에 한 칸, 칸마다 빨라져 최대 0.06초에 한 칸. 손을 떼거나 벽에 부딪히면 멈춰요. 돌진 중에 매치가 나면 박치기! 돌진한 칸 수 n에 따라 40 × n² 점(1칸 40 · 3칸 360 · 5칸 1,000)을 더 얻고 돌진이 끝나요. 이동은 평소처럼 블럭과 자리를 바꿔요.'},
   wanderer: {fx:'항상 켜져 있어요. 족보 점수가 모두 ×2예요. 대신 10번 움직이는 동안 블럭을 못 깨면 판의 무작위 칸으로 순간이동해요(블럭을 깨면 다시 10번부터)(그 칸의 블럭과 자리를 바꿔요). 도착한 자리가 매치 조건이면 바로 매치돼요.'},
   ambi:     {fx:'항상 켜져 있어요. 내가 둘이에요(왼쪽·오른쪽 벽 한 칸 안쪽에서 시작). 화면 왼쪽 절반 스와이프는 왼손, 오른쪽 절반은 오른손. 키보드는 WASD와 방향키.', when:'양손 조작에 익숙할 때', tip:'두 손이 서로 다른 색을 노리게 하면 매치 기회가 두 배예요.'}
 };
@@ -3887,6 +4239,7 @@ $('#pMenu').addEventListener('click',leaveGame);
 $('#again').addEventListener('click',()=>{ sfx('ui'); startGame(); });
 $('#toMenu').addEventListener('click',()=>{ sfx('ui'); go('menu'); });
 addEventListener('keydown',e=>{ if (typing(e)) return; if (e.key==='Escape' && curScreen==='game') setPause(!paused); });
+addEventListener('keyup',e=>{ if (e.key===' ' && dash) dash.held=false; });
 board=$('#board');
 function fitViewport(){
   const h = window.visualViewport ? visualViewport.height : innerHeight;
@@ -3917,7 +4270,7 @@ requestAnimationFrame(tick);
    - 판마다 시드를 정해 게임 난수를 고정하고, 입력을 시간과 함께 기록 → 같은 판 재생·버그 재현용
    - 기록은 config.js의 LOG_URL(구글 Apps Script)로 전송. 실패하거나 주소가 없으면 이 기기에 쌓아 두고 나중에 다시 보냄 */
 (() => {
-const BUILD = 'test-1012c';
+const BUILD = 'test-1014a';
 const LOG_URL = (new URLSearchParams(location.search).get('log') || window.LOG_URL || '').trim();
 const HAS_URL = /^https:\/\/script\.google(usercontent)?\.com\//.test(LOG_URL);
 const SKEY = 'swapmatch.test.v1', QKEY = 'swapmatch.test.queue';
@@ -3984,7 +4337,7 @@ newGame = function () {
 // 입력: "시각(1/100초, 36진수)+방향(U/D/L/R 조합)+손(2=두 번째)" 을 쉼표로. H = 꾹 누르기
 const _doStep = doStep;
 doStep = function (dr, dc, h = 0) {
-  if (run && !run.done && !dead && !halted()) {
+  if (run && !run.done && !dead && !halted() && !racerAuto) {   // 레이서 자동 이동은 입력이 아님
     const code = (dr < 0 ? 'U' : dr > 0 ? 'D' : '') + (dc < 0 ? 'L' : dc > 0 ? 'R' : '');
     run.inputs.push(Math.round((started ? elapsed : 0) * 100).toString(36) + code + (h ? '2' : ''));
   }
