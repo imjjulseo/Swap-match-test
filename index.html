@@ -152,8 +152,10 @@
   .photo{position:absolute;z-index:6;border-radius:3px;pointer-events:none;
     box-shadow:0 10px 30px rgba(0,0,0,.45);transform:rotate(-1.2deg)}
   .photo canvas{display:block}
-  body.replay #player{box-shadow:0 0 0 2px #fff,0 0 20px #fff;transition-duration:.05s}
-  body.replay .blk{transition-duration:.05s}
+  body.replay #player{box-shadow:0 0 0 2px #fff,0 0 20px #fff;transition-duration:.03s}
+  body.replay .blk{transition-duration:.03s}
+  .rpath{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;overflow:visible}
+  .rpath polyline{fill:none;stroke:rgba(255,255,255,.55);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:2 8}
   .photo svg{position:absolute;inset:8px auto auto 8px;overflow:visible;z-index:2}
   .photo polyline{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:2 9;opacity:.9}
   .photo .ghost{position:absolute;border:3px solid #fff;border-radius:5px;z-index:3;box-shadow:0 0 0 2px rgba(12,31,38,.6),0 0 18px #fff;
@@ -1504,7 +1506,9 @@ const shownCoins = () => coinShown;
 let photoOn=false, photoUntil=0, photoEl=null, photoPath=[], veil=[];
 // 사진 계획: photoPlan(방향 목록), ghost(계획상 위치). 재생: phRep = {q, i, t, n(매치 수), rec(족보 수), again}
 let photoPlan=[], ghost=null, phRep=null, prAuto=false;
-const PHOTO_GAP=0.075, PHOTO_HIT=0.11, PHOTO_MAXPLAN=60;
+const PHOTO_MAXPLAN=60;
+// 10/14 사진 실행 리듬: 시작 0.12초 → 칸 간격 0.06초에서 칸마다 ×0.8(최소 0.022초) → 매치하면 0.13초 멈칫 후 다시 0.06초부터
+const PHOTO = {lead:0.12, gap0:0.06, accel:0.8, gapMin:0.022, hit:0.13};
 // 신규 캐릭터 상태
 let players=[], hand=0, mt=null, ndl=null, mr=null, vamp=null, mirror=false, switching=false, revived=false, wpEls=[], hold=null, swallowTap=false;
 const isChr = id => !!(chr && chr.id===id);
@@ -2082,45 +2086,79 @@ function endPhoto(){
   sfx('flip',1);
   const q=photoPlan; photoPlan=[]; ghost=null;
   R.phR=0;
-  phRep={q, i:0, t:.22, n:0, rec:0, again:false, pts:0};   // 조각이 흩어지는 동안 잠깐 숨 고르고 시작
+  phRep={q, i:0, t:PHOTO.lead, run:0, n:0, again:false, svg:null};   // run = 마지막 매치 뒤로 이어 달린 칸 수(가속)
   document.body.classList.add('replay');
-  if (!q.length) finishReplay();
+  if (!q.length){ finishReplay(); return; }
+  replayPath();
 }
-// 계획한 움직임을 PHOTO_GAP 간격으로 드르륵 실행. 매치가 나면 PHOTO_HIT만큼 멈칫(히트스톱)하고 콤보 연출
+// 남은 계획 경로를 실제 판 위에 점선으로: 실행되면서 앞에서부터 지워져 '어디서 쾅 할지' 기대하게 함
+function replayPath(){
+  if (!phRep || reduceMotion) return;
+  let svg=phRep.svg;
+  if (!svg){ svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','rpath'); board.appendChild(svg); phRep.svg=svg; }
+  let r=player.r, c=player.c; const pts=[[r,c]];
+  for (let k=phRep.i;k<phRep.q.length;k++){ const [dr,dc]=phRep.q[k]; r+=dr; c+=dc;
+    if (!inb(r,c)){ if (!wrapOn() && !portalOn()) break; r=(r+cfg.n)%cfg.n; c=(c+cfg.n)%cfg.n; pts.push(null); }
+    pts.push([r,c]); }
+  const segs=[[]]; for (const pt of pts){ if (!pt){ segs.push([]); continue; } segs[segs.length-1].push(pt); }
+  svg.innerHTML=segs.filter(g=>g.length>1).map(g=>`<polyline points="${g.map(([r,c])=>`${(c+.5)*cellPx},${(r+.5)*cellPx}`).join(' ')}"/>`).join('');
+}
+// 드르륵: 매치 사이 칸은 점점 빨라지고(PHOTO.gap0 → ×PHOTO.accel, 최소 PHOTO.gapMin),
+// 쾅: 매치가 나면 PHOTO.hit 동안 멈칫 + 큰 타격, 그다음 구간은 다시 처음 속도부터 가속
 function replayTick(dt){
   if (!phRep || phRep.done) return;
-  phRep.t-=dt; if (phRep.t>0) return;
-  if (phRep.i>=phRep.q.length){ finishReplay(); return; }
+  phRep.t-=dt;
+  let guard=0;
+  while (phRep && !phRep.done && phRep.t<=0 && guard++<4){   // 한 프레임에 여러 칸(아주 빠를 때 프레임에 묶이지 않게)
+    if (phRep.i>=phRep.q.length){ finishReplay(); return; }
+    const hit=replayStep();
+    if (!phRep) return;
+    if (hit){ phRep.t+=PHOTO.hit; break; }
+    phRep.t+=Math.max(PHOTO.gapMin, PHOTO.gap0*Math.pow(PHOTO.accel, phRep.run));
+  }
+}
+function replayStep(){
   const [dr,dc]=phRep.q[phRep.i++], c0=clears, r0=player.r, cc0=player.c;
   prAuto=true; try { doStep(dr,dc); } finally { prAuto=false; }
-  if (!phRep) return;                   // 판이 끝났거나 초기화됨
-  const moved = player.r!==r0 || player.c!==cc0;
+  if (!phRep) return false;                   // 판이 끝났거나 초기화됨
+  const moved = player.r!==r0 || player.c!==cc0, k=phRep.run;
+  replayPath();
   if (moved && !reduceMotion){
     const a=document.createElement('div'); a.className='afterimg'; a.style.background='#fff';
     a.style.width=a.style.height=(cellPx-3)+'px'; a.style.transform=`translate(${cc0*cellPx+1.5}px,${r0*cellPx+1.5}px)`;
-    board.appendChild(a); a.animate([{opacity:.45},{opacity:0}],{duration:160,easing:'ease-out'}).onfinish=()=>a.remove();
+    board.appendChild(a); a.animate([{opacity:.5,scale:1},{opacity:0,scale:.6}],{duration:140,easing:'ease-out'}).onfinish=()=>a.remove();
+    const px=1+Math.min(6,k)*.4;   // 달릴수록 판이 진행 방향으로 더 쏠림
+    board.animate([{translate:'0 0'},{translate:`${dc*px}px ${dr*px}px`,offset:.4},{translate:'0 0'}],{duration:70,easing:'ease-out'});
   }
-  if (settings.sound && moved && clears===c0){ audioInit(); if (AC){ const t=AC.currentTime+.003; noise('bandpass',2400+phRep.i*40,.025,.22,t); } }   // 드르륵
-  if (clears>c0){
-    phRep.n++;
-    achSet('photo_1', phRep.n); achSet('photo_2', phRep.n);
-    const [x,y]=cellCenter(player.r,player.c), k=Math.min(PHOTO_CAP,phRep.n), rb=board.getBoundingClientRect();
-    slamText(`${phRep.n}연속`, Math.max(rb.left+60, Math.min(rb.right-60, x)), Math.max(rb.top+30, y-16), 22+k*4, '#FFFFFF');
-    if (!reduceMotion){
-      boardKick(dr,dc,3+k*1.5);
-      board.animate([{filter:'brightness(1.7)'},{filter:'brightness(1)'}],{duration:140,easing:'ease-out'});
-    }
-    burst(x,y,'#FFFFFF',8+k*3,260+k*40,5);
-    if (settings.sound){ audioInit(); if (AC){ const t=AC.currentTime+.005, f=440*Math.pow(2,(Math.min(12,phRep.n)*2)/12);
-      tone('triangle',f,f*1.5,.14,.28,t); tone('sine',f*2,f*2,.08,.12,t+.03); noise('highpass',3200,.05,.3,t); } }   // 찰칵 — 매치마다 한 음씩 올라감
-    phRep.t+=PHOTO_GAP+PHOTO_HIT;
-  } else phRep.t+=PHOTO_GAP;
+  if (clears===c0){
+    phRep.run++;
+    if (settings.sound && moved){ audioInit(); if (AC){ const t=AC.currentTime+.003, up=Math.min(12,k);   // 드르륵: 달릴수록 높고 빽빽하게
+      noise('bandpass',1800+up*260,.022,.26,t); tone('square',180+up*28,140+up*20,.025,.07,t); } }
+    return false;
+  }
+  // 쾅!
+  phRep.n++; phRep.run=0;
+  achSet('photo_1', phRep.n); achSet('photo_2', phRep.n);
+  const [x,y]=cellCenter(player.r,player.c), n=Math.min(PHOTO_CAP,phRep.n), rb=board.getBoundingClientRect();
+  const sx=Math.max(rb.left+60, Math.min(rb.right-60, x)), sy=Math.max(rb.top+30, y-16);
+  slamText(n>=4?`${phRep.n}연속!!`:`${phRep.n}연속`, sx, sy, 26+n*5, '#FFFFFF');
+  flashScreen('#FFFFFF',[x,y]);
+  burst(x,y,'#FFFFFF',12+n*4,320+n*50,6); burst(x,y,chrColor(),8+n*3,260+n*40,5);
+  if (!reduceMotion){
+    boardKick(dr,dc,5+n*2);
+    shockAt(x,y,'#fff',n);
+    board.animate([{filter:'brightness(2) contrast(1.2)'},{filter:'none'}],{duration:180,easing:'ease-out'});
+    $('#player').animate([{scale:1.35},{scale:1}],{duration:160,easing:'cubic-bezier(.2,.9,.3,1.4)'});
+  }
+  if (settings.sound){ audioInit(); if (AC){ const t=AC.currentTime+.005, f=330*Math.pow(2,(Math.min(12,phRep.n)*2)/12);
+    heavySfx(Math.min(4,n)); tone('triangle',f,f*1.5,.16,.3,t); noise('highpass',3600,.06,.35,t); } }   // 쾅 + 매치마다 한 음씩 올라가는 찰칵
+  return true;
 }
 function finishReplay(){
   if (!phRep || phRep.done) return;
   phRep.done=true;
   const n=phRep.n, rec=R.phR, again=phRep.again, gid=gameId;
-  document.body.classList.remove('replay');
+  document.body.classList.remove('replay'); if (phRep.svg) phRep.svg.remove();
   if (n){
     const bonus=photoBonusOf(n), [bx,by]=centerOf(board);
     score+=bonus; photoBonus+=bonus; scoreLog.push({t:elapsed, pts:bonus, clear:clears});
@@ -2146,9 +2184,9 @@ function shatterPhoto(){
   for (let i=0;i<N;i++){ const a=(i/N)*Math.PI*2+Math.random()*.35; pts.push([cx+Math.cos(a)*R, cy+Math.sin(a)*R]); }
   for (let i=0;i<N;i++){
     const p1=pts[i], p2=pts[(i+1)%N];
-    const mx=(p1[0]+p2[0])/2-cx, my=(p1[1]+p2[1])/2-cy, len=Math.hypot(mx,my)||1, v=260+Math.random()*220;
+    const mx=(p1[0]+p2[0])/2-cx, my=(p1[1]+p2[1])/2-cy, len=Math.hypot(mx,my)||1, v=620+Math.random()*320;   // 10/14: 조각이 판을 빨리 비켜 줘야 실행이 바로 보임
     shards.push({cv, w, h, ox, oy, tri:[[cx,cy],p1,p2], px:cx, py:cy, x:0, y:0,
-      vx:mx/len*v, vy:my/len*v-180, rot:-0.021, vr:(Math.random()-.5)*5, life:0, max:.65+Math.random()*.2});
+      vx:mx/len*v, vy:my/len*v-120, rot:-0.021, vr:(Math.random()-.5)*7, life:0, max:.3+Math.random()*.08});
   }
 }
 function stepShards(dt){
@@ -4173,7 +4211,7 @@ const DETAIL = {
   alchemist:{fx:'가장 많이 진행된 족보의 다음 색으로, 내 바로 옆을 뺀 가까운 블럭 5개의 색을 바꿔요.', when:'다음 색 블럭이 판에 부족할 때', tip:'바뀐 블럭에는 잠시 테두리가 남아요. 그 블럭들로 ㅗ 모양을 만들기 쉬워요.'},
   fever:    {fx:'10초 피버! 피버 중엔 색과 상관없이 매치할 때마다 스택이 1개씩 쌓이고(판 가운데 큰 숫자), 리필이 2배 빨라요. 족보는 평소처럼 진행돼요. 피버가 끝나면 스택 n개에 대해 50 × n(n+1)/2 점을 한 번에 받아요(5스택 750 · 10스택 2,750 · 15스택 6,000).', when:'매치를 빠르게 이어 갈 수 있을 때', tip:'피버 중엔 어떤 색을 깨도 거의 점수예요. 속도가 곧 점수예요.'},
   joker:    {fx:'다음 매치 2번이 색과 상관없이 모든 족보를 한 칸씩 진행해요. 여러 번 쌓을 수 있어요.', when:'세 족보가 모두 마지막 한 칸 남았을 때', tip:'와일드를 쌓아 뒀다가 한 번에 여러 족보를 완성하세요.'},
-  photo:    {fx:'7초 동안 판이 사진으로 멈추고 시간·리필도 멈춰요. 그동안 스와이프는 실제로 움직이지 않고 경로만 계획돼요(사진 위에 점선, 최대 60수). 사진이 깨지면 계획한 움직임을 0.075초 간격으로 드르륵 한 번에 실행하고, 그 사이 매치마다 보너스: 1번 250 · 2번 500 · 3번 1,000 · 4번 2,000 …(매치마다 2배, 6번까지). 실행 중에도 시간은 멈춰 있어요.', when:'판을 외워 둘 자신이 있을 때', tip:'사진 속 판을 보고 ㅗ 모양이 연달아 나오는 길을 미리 그려 두세요. 실행 중에 족보가 또 완성되면 실행이 끝난 뒤 사진을 한 장 더 찍어요.'},
+  photo:    {fx:'7초 동안 판이 사진으로 멈추고 시간·리필도 멈춰요. 그동안 스와이프는 실제로 움직이지 않고 경로만 계획돼요(사진 위에 점선, 최대 60수). 사진이 깨지면 남은 경로가 판에 점선으로 보이며 계획한 움직임을 드르륵 실행해요(매치 사이 칸은 점점 빨라지고, 매치하면 쾅! 멈칫한 뒤 다시 가속). 그 사이 매치마다 보너스: 1번 250 · 2번 500 · 3번 1,000 · 4번 2,000 …(매치마다 2배, 6번까지). 실행 중에도 시간은 멈춰 있어요.', when:'판을 외워 둘 자신이 있을 때', tip:'사진 속 판을 보고 ㅗ 모양이 연달아 나오는 길을 미리 그려 두세요. 실행 중에 족보가 또 완성되면 실행이 끝난 뒤 사진을 한 장 더 찍어요.'},
   mirror:   {fx:'항상 켜져 있어요. 판을 0.5초 꾹 누르면(키보드는 스페이스) 위아래가 뒤집힌 거울세계로 바뀌어요. 거울세계에서는 족보를 뒤에서부터 채우고, 족보 칸도 거꾸로 보여요. 앞뒤 진행은 공유되고, 앞과 뒤에서 채워 가운데서 만나 완성하면 점수 ×1.5.', when:'족보 앞쪽 색은 없고 뒤쪽 색이 많을 때', tip:'세계를 오가며 양쪽에서 채우면 족보가 가운데서 완성돼요.'},
   vampire:  {fx:'6초 동안 모든 블럭이 빨강이고 리필이 2.5배 빨라요. 주위 4칸이 모두 블럭이면 색과 상관없이 매치(매치당 +1초). 족보는 2칸 → 3칸 → 4칸 순서로 하나씩 채워져요.', when:'빨강 블럭이 많은 판에서 발동을 노릴 때', tip:'6초 동안 최대한 빠르게 매치하세요. 5번이면 2칸·3칸 족보가 함께 끝나요.'},
   madan:    {fx:'재생 중인 칸이 모두 즉시 채워지고, 시간이 멈춘 채 6발이 장전돼요. 이동할 때마다 들어가는 칸의 블럭을 쏴서 없애고 그 색으로 족보를 진행해요. 탄으로 완성한 족보는 점수 ×1.25. 장전은 18초까지, 6발을 다 쏘거나 18초가 지나면 7번째 탄의 저주가 터져요(시간 −8초 / 점수 −1,000 / 이번에 쏜 칸 30초간 재생 안 됨).', when:'족보에 필요한 색이 판 여기저기 흩어져 있을 때', tip:'6발로 족보 여러 개를 한꺼번에 노리세요. 저주 종류는 탄창 옆에 미리 보여요.'},
@@ -4505,7 +4543,7 @@ requestAnimationFrame(tick);
    - 판마다 시드를 정해 게임 난수를 고정하고, 입력을 시간과 함께 기록 → 같은 판 재생·버그 재현용
    - 기록은 config.js의 LOG_URL(구글 Apps Script)로 전송. 실패하거나 주소가 없으면 이 기기에 쌓아 두고 나중에 다시 보냄 */
 (() => {
-const BUILD = 'test-1014c';
+const BUILD = 'test-1014d';
 const LOG_URL = (new URLSearchParams(location.search).get('log') || window.LOG_URL || '').trim();
 const HAS_URL = /^https:\/\/script\.google(usercontent)?\.com\//.test(LOG_URL);
 const SKEY = 'swapmatch.test.v1', QKEY = 'swapmatch.test.queue';
